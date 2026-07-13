@@ -24,7 +24,7 @@
 #   WORKSPACE   Path to the `main` checkout that holds the code (this repository).
 #   IMAGE       Container image reference to run the processing in.
 # Optional:
-#   LIMIT        Batch size passed to update.py for incremental runs (default: 2000).
+#   LIMIT        Batch size passed to update.py for incremental runs (default: 500).
 #   GITHUB_SHA   Recorded in the provenance message to link results to the code commit.
 #   RUNNER_TEMP  Scratch directory for the working clones (default: /tmp).
 set -euo pipefail
@@ -32,19 +32,19 @@ set -euo pipefail
 : "${REPO_URL:?REPO_URL must be set}"
 : "${WORKSPACE:?WORKSPACE must be set}"
 : "${IMAGE:?IMAGE must be set}"
-LIMIT="${LIMIT:-2000}"
+# Streaming each NWB file over the network and running the full NWB Inspector on it is heavy,
+# so the default batch size is kept well below the input dataset's total size.
+LIMIT="${LIMIT:-500}"
 GITHUB_SHA="${GITHUB_SHA:-unknown}"
 
 BOT_NAME="github-actions[bot]"
 BOT_EMAIL="github-actions[bot]@users.noreply.github.com"
 
-# TODO: pick this cache's input mode — upstream DataLad dataset, local `sourcedata`
-# directory, or first-in-chain network fetch. The three modes, and how these variables
-# drive them, are documented in .claude/skills/setup-cache/SKILL.md (step 2). Leave
-# INPUT_SUBDATASET_URL empty for the two non-subdataset modes; the subdataset handling
-# below is then skipped.
-INPUT_SUBDATASET_URL=""  # e.g. https://github.com/dandi-cache/<input-dataset-name>.git
-INPUT_SUBDATASET_PATH="sourcedata/<input-dataset-name>"
+# Input mode: upstream DataLad dataset. content-id-to-nwb-file is registered as an input
+# subdataset, cloned into the derivatives dataset and pinned via `--input` in the provenance
+# of every run, so each result records the exact input commit it was computed from.
+INPUT_SUBDATASET_URL="https://github.com/dandi-cache/content-id-to-nwb-file.git"
+INPUT_SUBDATASET_PATH="sourcedata/content-id-to-nwb-file"
 INPUT_SUBDATASET_BRANCH="derivatives"
 
 DS="${RUNNER_TEMP:-/tmp}/derivatives-dataset"
@@ -90,7 +90,7 @@ cd "${DS}"
 
 git config user.name "${BOT_NAME}"
 git config user.email "${BOT_EMAIL}"
-mkdir -p derivatives
+mkdir -p derivatives logs
 
 # Carry the study-level BIDS dataset_description.json (kept on the code branch) onto the
 # derivatives dataset so the published dataset is self-describing. The save uses a
@@ -147,7 +147,8 @@ fi
 datalad containers-run -n pipeline --explicit \
   "${RUN_INPUT_ARGS[@]}" \
   --output derivatives \
-  -m "Update <cache-name> (code @ ${GITHUB_SHA}; image ${DIGEST})" \
+  --output logs \
+  -m "Update content-id-to-valid-nwb-file (code @ ${GITHUB_SHA}; image ${DIGEST})" \
   "python /code/update.py --base-directory /tmp --limit ${LIMIT}"
 
 # Publish the full results to the `derivatives` branch.
@@ -162,5 +163,5 @@ git -C "${DISTDIR}" init -q -b dist
 git -C "${DISTDIR}" config user.name "${BOT_NAME}"
 git -C "${DISTDIR}" config user.email "${BOT_EMAIL}"
 git -C "${DISTDIR}" add dataset_description.json derivatives
-git -C "${DISTDIR}" commit -q -m "Publish <cache-name>"
+git -C "${DISTDIR}" commit -q -m "Publish content-id-to-valid-nwb-file"
 git -C "${DISTDIR}" push -f "${REPO_URL}" dist:dist

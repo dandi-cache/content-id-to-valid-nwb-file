@@ -1,12 +1,24 @@
-# DANDI Cache: `<cache-name>`
+# DANDI Cache: `content-id-to-valid-nwb-file`
 
-`<A short description of what this cache contains and how it is derived.>`
+A one-to-one mapping from content IDs to their NWB validity, restricted to the NWB assets listed in [`content-id-to-nwb-file`](https://github.com/dandi-cache/content-id-to-nwb-file).
+
+For each content ID, the corresponding asset is streamed directly from the DANDI Archive — HDF5 NWB files with [`remfile`](https://github.com/flatironinstitute/remfile), and Zarr NWB stores (`.nwb.zarr`) with [`hdmf-zarr`](https://github.com/hdmf-dev/hdmf-zarr) — and inspected with the [NWB Inspector](https://github.com/NeurodataWithoutBorders/nwbinspector) using the `dandi` configuration at the `CRITICAL` importance threshold. A file is `valid` when it opens successfully and the inspector reports no `CRITICAL` issues; otherwise the record carries either the inspector messages found or the reason the file could not even be opened (e.g. a network/API error).
 
 Updated frequently.
 
 Primarily for use by developers.
 
-> **Note:** Throughout this template, `<cache-name>` refers to the hyphenated repository name (e.g., `my-cache`) and `<cache_name>` refers to the underscored form used for file and variable names (e.g., `my_cache`).
+Each line of the derivatives is a JSON object of the form:
+
+```json
+{"<content_id>": {"valid": <bool>, "messages": ["<NWB Inspector message>", ...]}}
+```
+
+or, when the file could not be opened or inspected at all:
+
+```json
+{"<content_id>": {"valid": false, "error": "<stage>: <exception>"}}
+```
 
 
 
@@ -22,16 +34,16 @@ import json
 
 import requests
 
-url = "https://raw.githubusercontent.com/dandi-cache/<cache-name>/refs/heads/dist/derivatives/<cache_name>.jsonl.gz"
+url = "https://raw.githubusercontent.com/dandi-cache/content-id-to-valid-nwb-file/refs/heads/dist/derivatives/content_id_to_valid_nwb_file.jsonl.gz"
 response = requests.get(url)
 lines = gzip.decompress(data=response.content).decode("utf-8").splitlines()
-<cache_name> = [json.loads(line) for line in lines]
+content_id_to_valid_nwb_file = [json.loads(line) for line in lines]
 ```
 
 ### Save to file
 
 ```bash
-curl https://raw.githubusercontent.com/dandi-cache/<cache-name>/refs/heads/dist/derivatives/<cache_name>.jsonl.gz -o <cache_name>.jsonl.gz
+curl https://raw.githubusercontent.com/dandi-cache/content-id-to-valid-nwb-file/refs/heads/dist/derivatives/content_id_to_valid_nwb_file.jsonl.gz -o content_id_to_valid_nwb_file.jsonl.gz
 ```
 
 
@@ -41,13 +53,13 @@ curl https://raw.githubusercontent.com/dandi-cache/<cache-name>/refs/heads/dist/
 If you plan on using this cache regularly, clone the `dist` branch of this repository:
 
 ```bash
-git clone --branch dist https://github.com/dandi-cache/<cache-name>.git
+git clone --branch dist https://github.com/dandi-cache/content-id-to-valid-nwb-file.git
 ```
 
 Or, if you prefer [DataLad](https://www.datalad.org/):
 
 ```bash
-datalad clone https://github.com/dandi-cache/<cache-name>.git --branch derivatives
+datalad clone https://github.com/dandi-cache/content-id-to-valid-nwb-file.git --branch derivatives
 ```
 
 Then set up a CRON on your system to pull the latest version of the cache at your desired frequency.
@@ -55,37 +67,7 @@ Then set up a CRON on your system to pull the latest version of the cache at you
 For example, through `crontab -e`, add:
 
 ```bash
-0 0 * * * git -C /path/to/<cache-name> pull
+0 0 * * * git -C /path/to/content-id-to-valid-nwb-file pull
 ```
 
 This will minimize data overhead by only loading the most recent changes.
-
-
-
-## How it works
-
-This cache template demonstrates how generated results of the code branch and records every update with full provenance.
-
-It uses three branches:
-
-- **`main`** holds only the code of the update logic, the runtime container definition, and the CI workflows (including building and distributing the container images).
-- [**`derivatives`**](https://github.com/dandi-cache/cache-template/tree/derivatives) is a persistent [DataLad](https://www.datalad.org/) dataset on its own branch. Each update is recorded there with `datalad containers-run`, so every revision carries full provenance of the exact command, the input subdataset commit, the output diff, and the runtime container image digest.
-- **`dist`** is the lightweight publication artifact consumed by downstream users and preferred for one-time downloads.
-
-The processing runs inside a published container image (`ghcr.io/dandi-cache/<cache-name>:latest`) that holds only the pinned runtime environment.
-
-The orchestration lives in [`code/update_pipeline.sh`](code/update_pipeline.sh); the actual cache logic lives in [`code/update.py`](code/update.py).
-
-The repository is described as a [BIDS study dataset](https://bids-specification.readthedocs.io/en/stable/common-principles.html#study-dataset) via [`dataset_description.json`](dataset_description.json) (`DatasetType: "study"`). Future enhancements may improve the provenance tracking through this mechanism in line with BEP028.
-
-
-
-## Repository setup
-
-After generating a repository from this template, the full setup checklist lives in [`.claude/skills/setup-cache/SKILL.md`](.claude/skills/setup-cache/SKILL.md): replacing the placeholders, choosing an input mode, implementing the cache logic, and removing the template scaffolding (this section and the **How it works** section above included).
-
-### With Claude Code
-
-Open a [Claude Code](https://claude.com/claude-code) session in the freshly generated repository and start from a prompt like:
-
-> Set up this new DANDI cache using the setup-cache skill. The cache should `<describe what this cache computes, where its inputs come from, and how often it should update>`. Open the result as a single setup PR.
