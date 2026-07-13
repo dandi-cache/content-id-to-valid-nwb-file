@@ -1,11 +1,21 @@
 import argparse
 import datetime
 import itertools
+import math
 import pathlib
 
 import dandi.dandiapi
 import nwbinspector
 from _pipeline_common import inspect_content_id, load_records, stage_to_log_file_path, write_records
+
+# When no explicit --limit is given, re-assess this fraction of the already-processed cache per
+# run. Run daily, this cycles the entire cache through re-assessment roughly once a month, in
+# small bites, rather than trying to reprocess everything at once.
+DEFAULT_FRACTION_PER_RUN = 1 / 30
+
+# Content IDs from before this field existed have no recorded `checked_at` and are treated as
+# the most overdue for refresh, so they naturally sort first.
+MISSING_CHECKED_AT = "0000-00-00"
 
 
 def _run(base_directory: pathlib.Path, limit: int | None) -> None:
@@ -24,15 +34,23 @@ def _run(base_directory: pathlib.Path, limit: int | None) -> None:
     stage_log_paths = stage_to_log_file_path(logs_dir=logs_dir)
     unexpected_errors_log_file_path = logs_dir / "unexpected_errors.txt"
 
-    # Already-processed content IDs are exactly the keys already recorded in the output file
-    # (success or failure both count), so re-runs skip them and only pick up new content IDs.
-    # Re-assessing previously processed IDs against newer NWB Inspector releases is the job of
-    # the separate `refresh.py` script, not this one.
-    content_ids_to_process = content_id_to_nwb_file.keys() - content_id_to_validity.keys()
+    # Refresh only re-assesses content IDs that are both already processed and still present in
+    # the current input (assets `content-id-to-nwb-file` has since dropped are left alone here).
+    # Picking up brand-new content IDs is `update.py`'s job, not this one.
+    candidate_content_ids = content_id_to_validity.keys() & content_id_to_nwb_file.keys()
+    content_ids_oldest_first = sorted(
+        candidate_content_ids,
+        key=lambda content_id: content_id_to_validity[content_id].get("checked_at", MISSING_CHECKED_AT),
+    )
+
+    if limit is None:
+        # Scale to the current cache size so the whole cache cycles through re-assessment on
+        # about a monthly cadence, however large the cache grows.
+        limit = math.ceil(len(content_ids_oldest_first) * DEFAULT_FRACTION_PER_RUN)
 
     client = dandi.dandiapi.DandiAPIClient()  # Run tokenless to ensure only public dandisets are accessed
     dandi_config = nwbinspector.load_config("dandi")
-    for content_id in itertools.islice(content_ids_to_process, limit):
+    for content_id in itertools.islice(content_ids_oldest_first, limit):
         dandiset_id, path = next(iter(content_id_to_nwb_file[content_id].items()))
 
         record = inspect_content_id(
@@ -53,7 +71,13 @@ def _run(base_directory: pathlib.Path, limit: int | None) -> None:
 if __name__ == "__main__":
     default_base_directory = pathlib.Path(__file__).parent.parent
 
-    parser = argparse.ArgumentParser(description="Update the content-id-to-valid-nwb-file DANDI cache.")
+    parser = argparse.ArgumentParser(
+        description=(
+            "Re-assess already-processed entries of the content-id-to-valid-nwb-file DANDI cache, "
+            "oldest-checked first. Unlike update.py, this revisits content IDs that already have a "
+            "recorded result, since the NWB Inspector itself evolves over time."
+        )
+    )
     parser.add_argument(
         "--base-directory",
         type=pathlib.Path,
@@ -68,7 +92,11 @@ if __name__ == "__main__":
         "--limit",
         type=int,
         default=None,
-        help="Optional cap on the number of new content IDs to process in this run.",
+        help=(
+            "Optional cap on the number of content IDs to re-assess in this run. Defaults to "
+            f"~{DEFAULT_FRACTION_PER_RUN:.0%} of the already-processed cache, so a daily run "
+            "cycles through the entire cache roughly once a month."
+        ),
     )
     args = parser.parse_args()
 
