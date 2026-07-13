@@ -16,8 +16,12 @@ def _run(base_directory: pathlib.Path, limit: int | None) -> None:
 
     derivatives_directory = base_directory / "derivatives"
     derivatives_directory.mkdir(parents=True, exist_ok=True)
-    output_file_path = derivatives_directory / "content_id_to_valid_nwb_file.jsonl"
-    content_id_to_validity = load_records(file_path=output_file_path)
+    validity_file_path = derivatives_directory / "content_id_to_valid_nwb_file.jsonl"
+    checked_at_file_path = derivatives_directory / "content_id_to_checked_at.jsonl"
+    messages_file_path = derivatives_directory / "content_id_to_messages.jsonl"
+    content_id_to_validity = load_records(file_path=validity_file_path)
+    content_id_to_checked_at = load_records(file_path=checked_at_file_path)
+    content_id_to_messages = load_records(file_path=messages_file_path)
 
     logs_dir = base_directory / "logs"
     logs_dir.mkdir(parents=True, exist_ok=True)
@@ -44,10 +48,18 @@ def _run(base_directory: pathlib.Path, limit: int | None) -> None:
             stage_to_log_file_path=stage_log_paths,
             unexpected_errors_log_file_path=unexpected_errors_log_file_path,
         )
-        record["checked_at"] = datetime.datetime.now(tz=datetime.timezone.utc).date().isoformat()
-        content_id_to_validity[content_id] = record
+        content_id_to_validity[content_id] = record["valid"]
+        content_id_to_checked_at[content_id] = datetime.datetime.now(tz=datetime.timezone.utc).date().isoformat()
+        if not record["valid"]:
+            content_id_to_messages[content_id] = {
+                key: value for key, value in record.items() if key in ("messages", "error")
+            }
+        else:
+            content_id_to_messages.pop(content_id, None)
 
-    write_records(file_path=output_file_path, records=content_id_to_validity)
+    write_records(file_path=validity_file_path, records=content_id_to_validity)
+    write_records(file_path=checked_at_file_path, records=content_id_to_checked_at)
+    write_records(file_path=messages_file_path, records=content_id_to_messages)
 
 
 if __name__ == "__main__":
