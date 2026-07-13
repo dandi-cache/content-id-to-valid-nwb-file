@@ -136,8 +136,11 @@ datalad save -m "Pin runtime container image to ${DIGEST}" .datalad
 # Fail fast if the dataset is not clean before the recorded run. `containers-run` requires a
 # clean tree to detect the command's changes and otherwise aborts with a generic "clean
 # dataset required" error; surfacing the offending paths here is far easier to diagnose.
+#
+# `datalad status` prints "nothing to save, working tree clean" on stdout even when the tree
+# IS clean, so that exact message must not be mistaken for an offending path.
 DATASET_STATUS=$(datalad status)
-if [ -n "${DATASET_STATUS}" ]; then
+if [ -n "${DATASET_STATUS}" ] && [ "${DATASET_STATUS}" != "nothing to save, working tree clean" ]; then
   echo "ERROR: derivatives dataset is not clean before containers-run." >&2
   echo "Offending paths:" >&2
   echo "${DATASET_STATUS}" >&2
