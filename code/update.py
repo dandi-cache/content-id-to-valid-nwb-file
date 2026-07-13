@@ -6,6 +6,7 @@ import traceback
 
 import dandi.dandiapi
 import h5py
+import hdmf_zarr
 import nwbinspector
 import pynwb
 import remfile
@@ -72,14 +73,17 @@ def _run(base_directory: pathlib.Path, limit: int | None) -> None:
             asset = dandiset.get_asset_by_path(path=path)
             s3_url = asset.get_content_url(follow_redirects=1, strip_query=True)
 
-            # Streaming-only, HDF5-only by design: remfile backs an h5py.File, so an asset that
-            # is not a plain HDF5 NWB file (e.g. a `.nwb.zarr` store) fails here rather than
-            # being opened another way.
+            # Streaming-only: HDF5 assets are backed by remfile via h5py; Zarr assets (`.nwb.zarr`)
+            # are opened directly by hdmf_zarr, which streams the store over HTTP(S)/S3 itself.
             stage = "opening the NWB file"
-            rem_file = remfile.File(url=s3_url)
-            h5py_file = h5py.File(name=rem_file, mode="r")
-            io = pynwb.NWBHDF5IO(file=h5py_file, mode="r", load_namespaces=True)
-            nwbfile = io.read()
+            if ".zarr" in pathlib.PurePosixPath(path).suffixes:
+                io = hdmf_zarr.NWBZarrIO(s3_url, mode="r")
+                nwbfile = io.read()
+            else:
+                rem_file = remfile.File(url=s3_url)
+                h5py_file = h5py.File(name=rem_file, mode="r")
+                io = pynwb.NWBHDF5IO(file=h5py_file, mode="r", load_namespaces=True)
+                nwbfile = io.read()
 
             stage = "running the NWB Inspector"
             inspector_messages = list(

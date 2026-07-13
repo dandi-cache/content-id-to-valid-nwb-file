@@ -2,7 +2,7 @@
 
 A one-to-one mapping from content IDs to their NWB validity, restricted to the NWB assets listed in [`content-id-to-nwb-file`](https://github.com/dandi-cache/content-id-to-nwb-file).
 
-For each content ID, the corresponding asset is streamed directly from the DANDI Archive with [`remfile`](https://github.com/flatironinstitute/remfile) (HDF5 NWB files only) and inspected with the [NWB Inspector](https://github.com/NeurodataWithoutBorders/nwbinspector) using the `dandi` configuration at the `CRITICAL` importance threshold. A file is `valid` when it opens successfully and the inspector reports no `CRITICAL` issues; otherwise the record carries either the inspector messages found or the reason the file could not even be opened (e.g. a non-HDF5 asset, such as a `.nwb.zarr` store, or a network/API error).
+For each content ID, the corresponding asset is streamed directly from the DANDI Archive — HDF5 NWB files with [`remfile`](https://github.com/flatironinstitute/remfile), and Zarr NWB stores (`.nwb.zarr`) with [`hdmf-zarr`](https://github.com/hdmf-dev/hdmf-zarr) — and inspected with the [NWB Inspector](https://github.com/NeurodataWithoutBorders/nwbinspector) using the `dandi` configuration at the `CRITICAL` importance threshold. A file is `valid` when it opens successfully and the inspector reports no `CRITICAL` issues; otherwise the record carries either the inspector messages found or the reason the file could not even be opened (e.g. a network/API error).
 
 Updated frequently.
 
