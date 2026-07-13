@@ -16,6 +16,11 @@ on:
       - "envs/pyproject.toml"
       - "containers/**"
       - ".github/workflows/build_and_upload_docker_image.yml"
+  schedule:
+    # Monthly on the 1st. envs/pyproject.toml pins no versions, so this alone is enough to
+    # pick up newer NWB Inspector (and dandi, pynwb, etc.) releases even when nothing in this
+    # repository has changed -- NWB Inspector is a living resource whose rules evolve over time.
+    - cron: "0 5 1 * *"
   workflow_dispatch:
 
 concurrency:

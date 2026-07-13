@@ -24,17 +24,30 @@
 #   WORKSPACE   Path to the `main` checkout that holds the code (this repository).
 #   IMAGE       Container image reference to run the processing in.
 # Optional:
-#   LIMIT        Batch size passed to update.py for incremental runs (default: 500).
-#   GITHUB_SHA   Recorded in the provenance message to link results to the code commit.
-#   RUNNER_TEMP  Scratch directory for the working clones (default: /tmp).
+#   PIPELINE_SCRIPT  Which code/*.py entry point to run inside the container: `update.py`
+#                    (new content IDs only) or `refresh.py` (re-assess already-processed
+#                    content IDs). Default: update.py.
+#   RUN_LABEL        Human-readable label used in the provenance commit message. Default: Update.
+#   LIMIT            Batch size cap passed to the script's `--limit`. For update.py this
+#                    defaults to 500. For refresh.py, leaving it unset lets the script scale
+#                    its own default to the current cache size (see refresh.py).
+#   GITHUB_SHA       Recorded in the provenance message to link results to the code commit.
+#   RUNNER_TEMP      Scratch directory for the working clones (default: /tmp).
 set -euo pipefail
 
 : "${REPO_URL:?REPO_URL must be set}"
 : "${WORKSPACE:?WORKSPACE must be set}"
 : "${IMAGE:?IMAGE must be set}"
+PIPELINE_SCRIPT="${PIPELINE_SCRIPT:-update.py}"
+RUN_LABEL="${RUN_LABEL:-Update}"
 # Streaming each NWB file over the network and running the full NWB Inspector on it is heavy,
-# so the default batch size is kept well below the input dataset's total size.
-LIMIT="${LIMIT:-500}"
+# so the default batch size (for update.py) is kept well below the input dataset's total size.
+# refresh.py computes its own default from the cache size when LIMIT is left unset.
+if [ "${PIPELINE_SCRIPT}" = "update.py" ]; then
+  LIMIT="${LIMIT:-500}"
+else
+  LIMIT="${LIMIT:-}"
+fi
 GITHUB_SHA="${GITHUB_SHA:-unknown}"
 
 BOT_NAME="github-actions[bot]"
@@ -144,12 +157,16 @@ RUN_INPUT_ARGS=()
 if [ -n "${INPUT_SUBDATASET_URL}" ]; then
   RUN_INPUT_ARGS=(--input "${INPUT_SUBDATASET_PATH}")
 fi
+LIMIT_ARGS=()
+if [ -n "${LIMIT}" ]; then
+  LIMIT_ARGS=(--limit "${LIMIT}")
+fi
 datalad containers-run -n pipeline --explicit \
   "${RUN_INPUT_ARGS[@]}" \
   --output derivatives \
   --output logs \
-  -m "Update content-id-to-valid-nwb-file (code @ ${GITHUB_SHA}; image ${DIGEST})" \
-  "python /code/update.py --base-directory /tmp --limit ${LIMIT}"
+  -m "${RUN_LABEL} content-id-to-valid-nwb-file (code @ ${GITHUB_SHA}; image ${DIGEST})" \
+  "python /code/${PIPELINE_SCRIPT} --base-directory /tmp ${LIMIT_ARGS[*]}"
 
 # Publish the full results to the `derivatives` branch.
 git -C "${DS}" push "${REPO_URL}" HEAD:derivatives

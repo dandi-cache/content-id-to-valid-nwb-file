@@ -4,6 +4,13 @@ A one-to-one mapping from content IDs to their NWB validity, restricted to the N
 
 For each content ID, the corresponding asset is streamed directly from the DANDI Archive — HDF5 NWB files with [`remfile`](https://github.com/flatironinstitute/remfile), and Zarr NWB stores (`.nwb.zarr`) with [`hdmf-zarr`](https://github.com/hdmf-dev/hdmf-zarr) — and inspected with the [NWB Inspector](https://github.com/NeurodataWithoutBorders/nwbinspector) using the `dandi` configuration at the `CRITICAL` importance threshold. A file is `valid` when it opens successfully and the inspector reports no `CRITICAL` issues; otherwise the record carries either the inspector messages found or the reason the file could not even be opened (e.g. a network/API error).
 
+The NWB Inspector is a living resource — its checks change over time — so this cache is kept fresh two ways:
+
+- **Update** (`code/update.py`, daily): assesses content IDs that have never been processed.
+- **Refresh** (`code/refresh.py`, daily): re-assesses already-processed content IDs, oldest-checked first, in small daily batches that cycle through the entire cache roughly once a month.
+
+Both run inside a pinned container image (see `containers/Dockerfile`) that is itself rebuilt monthly (and on every dependency-affecting change), so refreshed entries are checked against a recent NWB Inspector release.
+
 Updated frequently.
 
 Primarily for use by developers.
@@ -11,14 +18,16 @@ Primarily for use by developers.
 Each line of the derivatives is a JSON object of the form:
 
 ```json
-{"<content_id>": {"valid": <bool>, "messages": ["<NWB Inspector message>", ...]}}
+{"<content_id>": {"valid": <bool>, "messages": ["<NWB Inspector message>", ...], "checked_at": "<YYYY-MM-DD>"}}
 ```
 
 or, when the file could not be opened or inspected at all:
 
 ```json
-{"<content_id>": {"valid": false, "error": "<stage>: <exception>"}}
+{"<content_id>": {"valid": false, "error": "<stage>: <exception>", "checked_at": "<YYYY-MM-DD>"}}
 ```
+
+`checked_at` is the UTC date of the most recent assessment (initial or refreshed). Entries written before this field existed omit it, and are treated as the most overdue for refresh.
 
 
 
