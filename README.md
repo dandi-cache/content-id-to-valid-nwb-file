@@ -15,19 +15,33 @@ Updated frequently.
 
 Primarily for use by developers.
 
-Each line of the derivatives is a JSON object of the form:
+The cache is split across three derivatives files, each a JSON Lines file with one `{"<content_id>": <value>}` object per line.
+
+`derivatives/content_id_to_valid_nwb_file.jsonl` — the main cache, a plain content ID to validity mapping:
 
 ```json
-{"<content_id>": {"valid": <bool>, "messages": ["<NWB Inspector message>", ...], "checked_at": "<YYYY-MM-DD>"}}
+{"<content_id>": <bool>}
+```
+
+`derivatives/content_id_to_checked_at.jsonl` — the UTC date of the most recent assessment (initial or refreshed) for every content ID:
+
+```json
+{"<content_id>": "<YYYY-MM-DD>"}
+```
+
+Content IDs missing from this file have never been checked against a `checked_at` date, and are treated as the most overdue for refresh.
+
+`derivatives/content_id_to_messages.jsonl` — details for content IDs that are `false` in the main cache only; valid content IDs have no entry here:
+
+```json
+{"<content_id>": {"messages": ["<NWB Inspector message>", ...]}}
 ```
 
 or, when the file could not be opened or inspected at all:
 
 ```json
-{"<content_id>": {"valid": false, "error": "<stage>: <exception>", "checked_at": "<YYYY-MM-DD>"}}
+{"<content_id>": {"error": "<stage>: <exception>"}}
 ```
-
-`checked_at` is the UTC date of the most recent assessment (initial or refreshed). Entries written before this field existed omit it, and are treated as the most overdue for refresh.
 
 
 
