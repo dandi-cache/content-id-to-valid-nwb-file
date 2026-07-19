@@ -113,10 +113,14 @@ mkdir -p derivatives logs
 cp "${WORKSPACE}/dataset_description.json" dataset_description.json
 datalad save -m "Update dataset_description.json" dataset_description.json
 
-# Advance the input subdataset to its latest commit and record the pointer.
+# Advance the input subdataset to its latest commit and record the pointer. `-d .` is
+# required here: without it, `datalad save` resolves the target dataset by walking up from
+# the given path, and since that path is itself a subdataset mount point, it silently targets
+# the (clean, nothing-to-save) subdataset instead of registering the new commit in the
+# superdataset -- exiting 0 without saving anything.
 if [ -n "${INPUT_SUBDATASET_URL}" ]; then
   git submodule update --init --remote "${INPUT_SUBDATASET_PATH}"
-  datalad save -m "Update input subdataset to latest" "${INPUT_SUBDATASET_PATH}"
+  datalad save -d . -m "Update input subdataset to latest" "${INPUT_SUBDATASET_PATH}"
 fi
 
 # Pin the published image digest and register it as a container. Only the digest is stored
