@@ -1,0 +1,49 @@
+# The complete declarative description of this cache.
+#
+# One file, read by both the shared orchestration and this cache's own code, so the two cannot
+# disagree. It replaces what used to be spread across `code/update_pipeline.sh` (the input
+# subdataset URL, path and branch, the output file name, the entry point), the two workflows (the
+# image reference, the batch size, the second entry point), `dataset_description.json`, and the
+# constants at the top of `code/update.py` and `code/refresh.py`.
+
+[cache]
+name = "content-id-to-valid-nwb-file"
+
+# Three files, written together by every run:
+#
+#   content_id_to_valid_nwb_file  the cache itself, one boolean per content ID
+#   content_id_to_checked_at      when each content ID was last assessed, which is what `refresh`
+#                                 orders by
+#   content_id_to_messages        why a content ID is not valid, for those that are not
+#
+# Declaring them here is what publishes all three to `dist` and what keeps a `testing_` artifact
+# from reaching consumers.
+outputs = [
+    "content_id_to_valid_nwb_file.jsonl",
+    "content_id_to_checked_at.jsonl",
+    "content_id_to_messages.jsonl",
+]
+
+# Upstream cache, registered as a DataLad input subdataset and pinned in every run's provenance,
+# so each result records the exact input commit it was computed from.
+[[inputs]]
+name = "content-id-to-nwb-file"
+
+# Streaming a whole NWB file and inspecting it is heavy, so a run advances the backlog by a bounded
+# batch rather than trying to clear it. The workflow used to default to 500 on a schedule and 10000
+# on a manual dispatch; 500 is the one that actually ran.
+[operations.update]
+limit = 500
+
+# The second entry point. The NWB Inspector is a living resource whose checks change over time, so
+# what was assessed once has to be assessed again; `code/refresh.py` re-checks the already-recorded
+# content IDs, oldest first. It takes no limit here, and sizes each batch from the cache's own size
+# instead, so a daily run cycles through all of it over about a month however large it grows.
+[operations.refresh]
+label = "Refresh"
+
+# The published branches describe this repository as a BIDS study dataset, through a
+# `dataset_description.json` with `DatasetType: "study"`. The pipeline renders that file from this
+# section at the start of every run, so the repository no longer carries it.
+[description]
+authors = ["Cody Baker"]
