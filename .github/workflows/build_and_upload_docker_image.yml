@@ -21,6 +21,11 @@ on:
     # pick up newer NWB Inspector (and dandi, pynwb, etc.) releases even when nothing in this
     # repository has changed -- NWB Inspector is a living resource whose rules evolve over time.
     - cron: "0 5 1 * *"
+  repository_dispatch:
+    # Sent by dandi-cache-utils when it publishes a new base image. Once this cache's image is
+    # built `FROM` that base, `FROM` resolves at build time, so without this it would keep whatever
+    # base it was last built on until its own Dockerfile or dependencies happened to change.
+    types: [ base-image-published ]
   workflow_dispatch:
 
 concurrency:
