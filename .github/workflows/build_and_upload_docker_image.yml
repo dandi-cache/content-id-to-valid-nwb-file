@@ -1,5 +1,9 @@
 name: Build and Upload Container
 
+# The build itself -- tagging per ref so a branch build no longer overwrites `:latest`, the
+# registry login, and the check that the image really did come from the shared base -- is in the
+# shared action.
+
 permissions:
   contents: read
   packages: read
@@ -17,14 +21,17 @@ on:
       - "containers/**"
       - ".github/workflows/build_and_upload_docker_image.yml"
   schedule:
-    # Monthly on the 1st. envs/pyproject.toml pins no versions, so this alone is enough to
-    # pick up newer NWB Inspector (and dandi, pynwb, etc.) releases even when nothing in this
-    # repository has changed -- NWB Inspector is a living resource whose rules evolve over time.
+    # Monthly on the 1st, as a floor under the dispatch below. Nothing is version-pinned in the base
+    # image, so a rebuild picks up newer NWB Inspector (and dandi, pynwb, etc.) releases even when
+    # nothing here has changed, and the Refresh workflow then re-assesses the cache against them.
+    # The base rebuilds monthly too and asks for this one, so in the ordinary case this fires on an
+    # image that is already current; it is here so that a broken fan-out cannot leave this cache
+    # validating against a year-old inspector without anyone noticing.
     - cron: "0 5 1 * *"
   repository_dispatch:
-    # Sent by dandi-cache-utils when it publishes a new base image. Once this cache's image is
-    # built `FROM` that base, `FROM` resolves at build time, so without this it would keep whatever
-    # base it was last built on until its own Dockerfile or dependencies happened to change.
+    # Sent by dandi-cache-utils when it publishes a new base image. This image is built `FROM` that
+    # base and `FROM` resolves at build time, so without this the cache would keep whatever base it
+    # was last built on until its own Dockerfile or dependencies happened to change.
     types: [ base-image-published ]
   workflow_dispatch:
 
@@ -39,46 +46,8 @@ jobs:
       contents: read
       packages: write
     steps:
-      - name: Checkout
-        uses: actions/checkout@v7
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v4
-
-      # Skip authentication on pull requests: those only build the image to validate it.
-      - name: Log in to GitHub Container Registry
-        if: ${{ github.event_name != 'pull_request' }}
-        uses: docker/login-action@v4
+      - uses: dandi-cache/dandi-cache-action/build-and-publish-image@v1
         with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets._GITHUB_API_KEY }}
-
-      - name: Build and push
-        uses: docker/build-push-action@v7
-        with:
-          context: .
-          file: containers/Dockerfile
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: |
-            ghcr.io/dandi-cache/content-id-to-valid-nwb-file:latest
-            ghcr.io/dandi-cache/content-id-to-valid-nwb-file:${{ github.sha }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-  NotifyOnFailure:
-    runs-on: ubuntu-latest
-    needs: [ BuildAndPush ]
-    if: ${{ always() && failure() }}
-    permissions: {}
-    steps:
-      - uses: dawidd6/action-send-mail@v18
-        with:
-          server_address: smtp.gmail.com
-          server_port: 465
-          username: ${{ secrets.MAIL_USERNAME }}
-          password: ${{ secrets.MAIL_PASSWORD }}
-          subject: "CI Failure: DANDI Cache: content-id-to-valid-nwb-file container build"
-          to: cody.c.baker.phd@gmail.com  # Add more with comma separation (no spaces)
-          from: DANDI Cache <dandi-cache@users.noreply.github.com>
-          body: "Please check the latest container build of the DANDI Cache: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          token: ${{ secrets._GITHUB_API_KEY }}
+          mail-username: ${{ secrets.MAIL_USERNAME }}
+          mail-password: ${{ secrets.MAIL_PASSWORD }}
