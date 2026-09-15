@@ -1,87 +1,111 @@
-import argparse
+"""Assess which of the NWB assets upstream are valid, according to the NWB Inspector.
+
+Each content ID is resolved to an S3 URL through the tokenless DANDI API, streamed rather than
+downloaded, and inspected with the `dandi` configuration at the CRITICAL threshold. A file is
+valid when it opens and the inspector reports nothing.
+
+`code/refresh.py` is this same operation over a different batch, so it calls `main` below rather
+than repeating any of it.
+
+Everything shared with the other caches -- the argument parsing, the logging, the batch cap, the
+error logs, the output paths, and testing mode -- comes from `dandi_cache_utils`, which the
+runtime image carries.
+"""
+
 import datetime
-import itertools
-import pathlib
 
-import dandi.dandiapi
-import nwbinspector
-from _pipeline_common import inspect_content_id, load_records, stage_to_log_file_path, write_records
+import dandi_cache_utils as dandi_cache
+
+CHECKED_AT = "content_id_to_checked_at.jsonl"
+MESSAGES = "content_id_to_messages.jsonl"
+
+# Resolving an asset, opening it and inspecting it fail for unrelated reasons, and a week of
+# failures is only triageable when each kind has its own log.
+STAGES = {
+    "retrieving asset information from the DANDI API": "dandi_api_errors.txt",
+    "opening the NWB file": "file_open_errors.txt",
+    "running the NWB Inspector": "nwb_inspector_errors.txt",
+}
+
+# The NWB Inspector's checks change over time, so an assessment is only as current as the release
+# it was made against. Re-assessing this fraction per refresh cycles the whole cache through a
+# recent release about once a month when run daily, however large the cache grows.
+REFRESH_FRACTION_PER_RUN = 1 / 30
 
 
-def _run(base_directory: pathlib.Path, limit: int | None) -> None:
-    input_file_path = (
-        base_directory / "sourcedata" / "content-id-to-nwb-file" / "derivatives" / "content_id_to_nwb_file.jsonl"
-    )
-    content_id_to_nwb_file = load_records(file_path=input_file_path)
+def main(*, operation: str = "update") -> None:
+    dataset, arguments = dandi_cache.open_dataset(operation=operation)
+    nwb_files = dataset.read_input()
 
-    derivatives_directory = base_directory / "derivatives"
-    derivatives_directory.mkdir(parents=True, exist_ok=True)
-    validity_file_path = derivatives_directory / "content_id_to_valid_nwb_file.jsonl"
-    checked_at_file_path = derivatives_directory / "content_id_to_checked_at.jsonl"
-    messages_file_path = derivatives_directory / "content_id_to_messages.jsonl"
-    content_id_to_validity = load_records(file_path=validity_file_path)
-    content_id_to_checked_at = load_records(file_path=checked_at_file_path)
-    content_id_to_messages = load_records(file_path=messages_file_path)
+    validity = dataset.read_output_lookup()
+    checked_at = dataset.read_output_lookup(CHECKED_AT)
+    messages = dataset.read_output_lookup(MESSAGES)
 
-    logs_dir = base_directory / "logs"
-    logs_dir.mkdir(parents=True, exist_ok=True)
-    stage_log_paths = stage_to_log_file_path(logs_dir=logs_dir)
-    unexpected_errors_log_file_path = logs_dir / "unexpected_errors.txt"
+    resolver = dandi_cache.api.AssetResolver()
+    inspector_config = dandi_cache.nwb.inspector_config()
 
-    # Already-processed content IDs are exactly the keys already recorded in the output file
-    # (success or failure both count), so re-runs skip them and only pick up new content IDs.
-    # Re-assessing previously processed IDs against newer NWB Inspector releases is the job of
-    # the separate `refresh.py` script, not this one.
-    content_ids_to_process = content_id_to_nwb_file.keys() - content_id_to_validity.keys()
-
-    client = dandi.dandiapi.DandiAPIClient()  # Run tokenless to ensure only public dandisets are accessed
-    dandi_config = nwbinspector.load_config("dandi")
-    for content_id in itertools.islice(content_ids_to_process, limit):
-        dandiset_id, path = next(iter(content_id_to_nwb_file[content_id].items()))
-
-        record = inspect_content_id(
-            client=client,
-            dandi_config=dandi_config,
-            content_id=content_id,
-            dandiset_id=dandiset_id,
-            path=path,
-            stage_to_log_file_path=stage_log_paths,
-            unexpected_errors_log_file_path=unexpected_errors_log_file_path,
-        )
-        content_id_to_validity[content_id] = record["valid"]
-        content_id_to_checked_at[content_id] = datetime.datetime.now(tz=datetime.timezone.utc).date().isoformat()
-        if not record["valid"]:
-            content_id_to_messages[content_id] = {
-                key: value for key, value in record.items() if key in ("messages", "error")
-            }
+    def record_assessment(content_id: str, /, *, reason: dict | None) -> None:
+        """Stamp a content ID as assessed today, keeping the reason it is not valid, if it is not."""
+        checked_at[content_id] = datetime.datetime.now(tz=datetime.UTC).date().isoformat()
+        if reason is None:
+            messages.pop(content_id, None)
         else:
-            content_id_to_messages.pop(content_id, None)
+            messages[content_id] = reason
 
-    write_records(file_path=validity_file_path, records=content_id_to_validity)
-    write_records(file_path=checked_at_file_path, records=content_id_to_checked_at)
-    write_records(file_path=messages_file_path, records=content_id_to_messages)
+    def assess(content_id, item) -> bool:
+        dandiset_id, path = dandi_cache.api.split_location(nwb_files[content_id])
+        # Reported with any failure, so an error log names the asset rather than only its content ID.
+        item.context.update({"dandiset ID": dandiset_id, "path": path})
+
+        item.stage = "retrieving asset information from the DANDI API"
+        url = resolver.content_url(dandiset_id, path)
+        item.context["URL"] = url
+
+        item.stage = "opening the NWB file"
+        nwbfile, _io = dandi_cache.nwb.open_nwbfile(url, path)
+
+        item.stage = "running the NWB Inspector"
+        critical_messages = dandi_cache.nwb.inspect_nwbfile_object(nwbfile, config=inspector_config)
+
+        record_assessment(content_id, reason={"messages": critical_messages} if critical_messages else None)
+        return not critical_messages
+
+    limit = dandi_cache.effective_limit(testing=dataset.testing, limit=arguments.limit)
+    if operation == "refresh":
+        # What is already recorded and still listed upstream. Picking up new content IDs is the
+        # update's job, and an asset the upstream has since dropped is left alone rather than
+        # re-fetched.
+        batch = dandi_cache.select_stale(
+            validity.keys() & nwb_files.keys(),
+            checked_at,
+            limit=limit,
+            fraction_per_run=REFRESH_FRACTION_PER_RUN,
+        )
+    else:
+        batch = dandi_cache.select_new(nwb_files, validity, limit=limit)
+
+    dandi_cache.run_incremental_update(
+        dataset,
+        batch=batch,
+        process=assess,
+        recorded=validity,
+        # A file that cannot be opened or inspected is not a valid file. That is the answer, not a
+        # reason to try again, so it is recorded as such and left to the refresh to revisit.
+        on_failure=dandi_cache.RECORD,
+        failure_value=False,
+        on_error=lambda content_id, item: record_assessment(content_id, reason={"error": item.error_summary}),
+        on_write=lambda: write_side_outputs(dataset, checked_at=checked_at, messages=messages),
+        stages=STAGES,
+        describe=lambda valid: "valid" if valid else "not valid",
+        checkpoint_every=50,
+    )
+
+
+def write_side_outputs(dataset, /, *, checked_at: dict, messages: dict) -> None:
+    """Write the two files that accompany the cache, at the same moments the cache itself is written."""
+    dataset.write_output_lookup(checked_at, CHECKED_AT)
+    dataset.write_output_lookup(messages, MESSAGES)
 
 
 if __name__ == "__main__":
-    default_base_directory = pathlib.Path(__file__).parent.parent
-
-    parser = argparse.ArgumentParser(description="Update the content-id-to-valid-nwb-file DANDI cache.")
-    parser.add_argument(
-        "--base-directory",
-        type=pathlib.Path,
-        default=default_base_directory,
-        help=(
-            "The directory containing the `sourcedata` and `derivatives` directories. "
-            "Set to the mounted dataset path when run inside the pipeline container; "
-            "defaults to the repository root."
-        ),
-    )
-    parser.add_argument(
-        "--limit",
-        type=int,
-        default=None,
-        help="Optional cap on the number of new content IDs to process in this run.",
-    )
-    args = parser.parse_args()
-
-    _run(base_directory=args.base_directory, limit=args.limit)
+    main()
