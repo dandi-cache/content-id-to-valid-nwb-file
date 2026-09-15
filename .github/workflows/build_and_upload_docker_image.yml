@@ -21,10 +21,18 @@ on:
       - "containers/**"
       - ".github/workflows/build_and_upload_docker_image.yml"
   schedule:
-    # Monthly on the 1st. Nothing is version-pinned in the base image, so this alone picks up newer
-    # NWB Inspector (and dandi, pynwb, etc.) releases even when nothing here has changed. The
-    # Refresh workflow is what then re-assesses the cache against them.
+    # Monthly on the 1st, as a floor under the dispatch below. Nothing is version-pinned in the base
+    # image, so a rebuild picks up newer NWB Inspector (and dandi, pynwb, etc.) releases even when
+    # nothing here has changed, and the Refresh workflow then re-assesses the cache against them.
+    # The base rebuilds monthly too and asks for this one, so in the ordinary case this fires on an
+    # image that is already current; it is here so that a broken fan-out cannot leave this cache
+    # validating against a year-old inspector without anyone noticing.
     - cron: "0 5 1 * *"
+  repository_dispatch:
+    # Sent by dandi-cache-utils when it publishes a new base image. This image is built `FROM` that
+    # base and `FROM` resolves at build time, so without this the cache would keep whatever base it
+    # was last built on until its own Dockerfile or dependencies happened to change.
+    types: [ base-image-published ]
   workflow_dispatch:
 
 concurrency:
