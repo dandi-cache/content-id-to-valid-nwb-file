@@ -14,7 +14,7 @@ on:
   workflow_dispatch:
     inputs:
       testing:
-        description: "Testing mode: re-assess a handful of items into testing_-prefixed files, leaving the real cache untouched."
+        description: "Testing mode: re-assess the cache.toml testing_limit of items into testing_-prefixed files, leaving the real cache untouched."
         required: false
         type: boolean
         default: false
@@ -22,7 +22,8 @@ on:
         description: >-
           Cap on the content IDs re-assessed this run. Leave empty for the default of about 1/30th
           of the cache, so a daily run cycles through the whole of it roughly once a month. Set it
-          to the full cache size for a one-off complete re-assessment.
+          to the full cache size for a one-off complete re-assessment. Either way the run
+          publishes the complete cache; the cap is on how much of it is re-assessed.
         required: false
         type: string
         default: ""

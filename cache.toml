@@ -34,13 +34,18 @@ name = "content-id-to-nwb-file"
 # on a manual dispatch; 500 is the one that actually ran.
 [operations.update]
 limit = 500
+# A testing run streams a whole NWB file and runs the inspector over it, so two is already
+# minutes of work and exercises the resolve, the open, the inspection and all three writes.
+testing_limit = 2
 
 # The second entry point. The NWB Inspector is a living resource whose checks change over time, so
 # what was assessed once has to be assessed again; `code/refresh.py` re-checks the already-recorded
 # content IDs, oldest first. It takes no limit here, and sizes each batch from the cache's own size
-# instead, so a daily run cycles through all of it over about a month however large it grows.
+# instead, so a daily run cycles through all of it over about a month however large it grows. It
+# still declares what a smoke run of it costs, since `--testing` applies to either entry point.
 [operations.refresh]
 label = "Refresh"
+testing_limit = 2
 
 # The published branches describe this repository as a BIDS study dataset, through a
 # `dataset_description.json` with `DatasetType: "study"`. The pipeline renders that file from this
