@@ -70,7 +70,7 @@ def main(*, operation: str = "update") -> None:
         record_assessment(content_id, reason={"messages": critical_messages} if critical_messages else None)
         return not critical_messages
 
-    limit = dandi_cache.effective_limit(testing=dataset.testing, limit=arguments.limit)
+    limit = dataset.limit(arguments.limit)
     if operation == "refresh":
         # What is already recorded and still listed upstream. Picking up new content IDs is the
         # update's job, and an asset the upstream has since dropped is left alone rather than
