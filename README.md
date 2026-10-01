@@ -7,8 +7,8 @@ A file is `valid` when it opens successfully and the inspector reports no `CRITI
 
 The NWB Inspector is a living resource — its checks change over time — so this cache is kept fresh two ways:
 
-- **Update** (`code/update.py`, daily): assesses content IDs that have never been processed.
-- **Refresh** (`code/refresh.py`, daily): re-assesses already-processed content IDs, oldest-checked first, in small daily batches that cycle through the entire cache roughly once a month.
+- **Update** (`code/update.py`, every four hours): assesses content IDs that have never been processed.
+- **Refresh** (`code/refresh.py`, daily): re-assesses already-processed content IDs, oldest-checked first, in a fixed daily batch.
 
 Both run inside a pinned container image (see `containers/Dockerfile`) that is itself rebuilt monthly (and on every dependency-affecting change), so refreshed entries are checked against a recent NWB Inspector release.
 
