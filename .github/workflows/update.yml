@@ -10,11 +10,13 @@ permissions:
 
 on:
   schedule:
-    # Every four hours from 02:00 UTC. A run of the cache.toml limit takes about three hours, so
+    # Every four hours from 02:41 UTC. A run of the cache.toml limit takes about three hours, so
     # each one is done before the next is due, and the hour of slack absorbs the daily Refresh
     # queued between them. A tighter cadence would queue a third run behind two, and GitHub
-    # cancels a pending run in a concurrency group when another one arrives.
-    - cron: "0 2/4 * * *"
+    # cancels a pending run in a concurrency group when another one arrives. Off the hour, because
+    # GitHub delays and drops scheduled runs that fall on it: on the hour, this cache's runs
+    # started three and a half to five and a half hours late.
+    - cron: "41 2/4 * * *"
   workflow_dispatch:
     inputs:
       testing:
