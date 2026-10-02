@@ -27,11 +27,6 @@ STAGES = {
     "running the NWB Inspector": "nwb_inspector_errors.txt",
 }
 
-# The NWB Inspector's checks change over time, so an assessment is only as current as the release
-# it was made against. Re-assessing this fraction per refresh cycles the whole cache through a
-# recent release about once a month when run daily, however large the cache grows.
-REFRESH_FRACTION_PER_RUN = 1 / 30
-
 
 def main(*, operation: str = "update") -> None:
     dataset, arguments = dandi_cache.open_dataset(operation=operation)
@@ -79,7 +74,6 @@ def main(*, operation: str = "update") -> None:
             validity.keys() & nwb_files.keys(),
             checked_at,
             limit=limit,
-            fraction_per_run=REFRESH_FRACTION_PER_RUN,
         )
     else:
         batch = dandi_cache.select_new(nwb_files, validity, limit=limit)

@@ -10,7 +10,7 @@ permissions:
 
 on:
   schedule:
-    - cron: "0 12 * * *"  # Daily at 12:00 UTC.
+    - cron: "0 12 * * *"  # Daily at 12:00 UTC, midway through an Update, so it runs in that run's wake.
   workflow_dispatch:
     inputs:
       testing:
@@ -20,10 +20,8 @@ on:
         default: false
       limit:
         description: >-
-          Cap on the content IDs re-assessed this run. Leave empty for the default of about 1/30th
-          of the cache, so a daily run cycles through the whole of it roughly once a month. Set it
-          to the full cache size for a one-off complete re-assessment. Either way the run
-          publishes the complete cache; the cap is on how much of it is re-assessed.
+          Cap on the content IDs re-assessed this run, overriding the limit in cache.toml. Either
+          way the run publishes the complete cache; the cap is on how much of it is re-assessed.
         required: false
         type: string
         default: ""

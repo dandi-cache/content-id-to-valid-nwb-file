@@ -2,7 +2,7 @@
 
 The NWB Inspector is a living resource: a file assessed against one release can assess differently
 against the next. `code/update.py` never revisits what it has recorded, so this entry point does,
-in daily batches sized from the cache itself.
+in the daily batch that `cache.toml` declares.
 
 It is the same operation over a different batch, which is all that `operation="refresh"` selects.
 """

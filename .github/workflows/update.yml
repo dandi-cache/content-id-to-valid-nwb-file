@@ -10,7 +10,11 @@ permissions:
 
 on:
   schedule:
-    - cron: "0 6/6 * * *"  # At 06:00, 12:00 and 18:00 UTC; the upstream cache updates a few hours before the first.
+    # Every four hours from 02:00 UTC. A run of the cache.toml limit takes about three hours, so
+    # each one is done before the next is due, and the hour of slack absorbs the daily Refresh
+    # queued between them. A tighter cadence would queue a third run behind two, and GitHub
+    # cancels a pending run in a concurrency group when another one arrives.
+    - cron: "0 2/4 * * *"
   workflow_dispatch:
     inputs:
       testing:

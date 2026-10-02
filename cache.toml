@@ -30,21 +30,26 @@ outputs = [
 name = "content-id-to-nwb-file"
 
 # Streaming a whole NWB file and inspecting it is heavy, so a run advances the backlog by a bounded
-# batch rather than trying to clear it. The workflow used to default to 500 on a schedule and 10000
-# on a manual dispatch; 500 is the one that actually ran.
+# batch rather than trying to clear it. An item costs about 4.4 s on a hosted runner (5 s at the
+# slow end), so 2500 is about three hours, leaving two of the job's 330-minute timeout as margin.
+# The margin matters, because a run that times out publishes nothing it did. Six runs a day (see
+# update.yml) then clear about 15000 items a day.
 [operations.update]
-limit = 500
+limit = 2500
 # A testing run streams a whole NWB file and runs the inspector over it, so two is already
 # minutes of work and exercises the resolve, the open, the inspection and all three writes.
 testing_limit = 2
 
 # The second entry point. The NWB Inspector is a living resource whose checks change over time, so
 # what was assessed once has to be assessed again; `code/refresh.py` re-checks the already-recorded
-# content IDs, oldest first. It takes no limit here, and sizes each batch from the cache's own size
-# instead, so a daily run cycles through all of it over about a month however large it grows. It
-# still declares what a smoke run of it costs, since `--testing` applies to either entry point.
+# content IDs, oldest first. Its batch is fixed rather than a share of the cache, since a share
+# grows with the cache until a run outlives the job's timeout (a thirtieth of the 230k upstream
+# assets is over nine hours). 1500 is about two hours a day, leaving the rest of the day's runner
+# time to the update, which other caches are waiting on. It still declares what a smoke run of it
+# costs, since `--testing` applies to either entry point.
 [operations.refresh]
 label = "Refresh"
+limit = 1500
 testing_limit = 2
 
 # The published branches describe this repository as a BIDS study dataset, through a
