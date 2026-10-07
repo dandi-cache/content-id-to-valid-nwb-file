@@ -34,7 +34,7 @@ def main(*, operation: str = "update") -> None:
 
     validity = dataset.read_output_lookup()
     checked_at = dataset.read_output_lookup(CHECKED_AT)
-    messages = dataset.read_split_output_lookup(MESSAGES)
+    messages = dataset.read_output_lookup(MESSAGES)
 
     resolver = dandi_cache.api.AssetResolver()
     inspector_config = dandi_cache.nwb.inspector_config()
@@ -98,7 +98,7 @@ def main(*, operation: str = "update") -> None:
 def write_side_outputs(dataset, /, *, checked_at: dict, messages: dict) -> None:
     """Write the two files that accompany the cache, at the same moments the cache itself is written."""
     dataset.write_output_lookup(checked_at, CHECKED_AT)
-    dataset.write_split_output_lookup(messages, MESSAGES)
+    dataset.write_output_lookup(messages, MESSAGES)
 
 
 if __name__ == "__main__":

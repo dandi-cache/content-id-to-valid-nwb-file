@@ -16,32 +16,19 @@ name = "content-id-to-valid-nwb-file"
 #                                 orders by
 #   content_id_to_messages        why a content ID is not valid, for those that are not
 #
-# The messages are split across sixteen files by the first digit of the content ID,
-# `content_id_to_messages_0.jsonl` to `content_id_to_messages_f.jsonl`. As one file they passed
-# GitHub's 100 MiB limit and the push of every run was refused.
-#
-# Declaring them here is what publishes all of them to `dist` and what keeps a `testing_` artifact
+# Declaring them here is what publishes all three to `dist` and what keeps a `testing_` artifact
 # from reaching consumers.
 outputs = [
     "content_id_to_valid_nwb_file.jsonl",
     "content_id_to_checked_at.jsonl",
-    "content_id_to_messages_0.jsonl",
-    "content_id_to_messages_1.jsonl",
-    "content_id_to_messages_2.jsonl",
-    "content_id_to_messages_3.jsonl",
-    "content_id_to_messages_4.jsonl",
-    "content_id_to_messages_5.jsonl",
-    "content_id_to_messages_6.jsonl",
-    "content_id_to_messages_7.jsonl",
-    "content_id_to_messages_8.jsonl",
-    "content_id_to_messages_9.jsonl",
-    "content_id_to_messages_a.jsonl",
-    "content_id_to_messages_b.jsonl",
-    "content_id_to_messages_c.jsonl",
-    "content_id_to_messages_d.jsonl",
-    "content_id_to_messages_e.jsonl",
-    "content_id_to_messages_f.jsonl",
+    "content_id_to_messages.jsonl",
 ]
+
+# Kept on `derivatives` as sixteen files, `content_id_to_messages_0.jsonl` to
+# `content_id_to_messages_f.jsonl`, by the first digit of the content ID. Its inspector messages
+# passed 100 MiB on 2026-10-07, after which every push of `derivatives` was refused. `dist` still
+# publishes it as the one `content_id_to_messages.jsonl.gz`, so no consumer URL changes.
+split = ["content_id_to_messages.jsonl"]
 
 # Upstream cache, registered as a DataLad input subdataset and pinned in every run's provenance,
 # so each result records the exact input commit it was computed from.
