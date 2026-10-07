@@ -32,7 +32,11 @@ The cache is split across three derivatives files, each a JSON Lines file with o
 
 Content IDs missing from this file have never been checked against a `checked_at` date, and are treated as the most overdue for refresh.
 
-`derivatives/content_id_to_messages.jsonl` — details for content IDs that are `false` in the main cache only; valid content IDs have no entry here:
+`derivatives/content_id_to_messages_<x>.jsonl`, for each hexadecimal digit `<x>` from `0` to `f` — details for content IDs that are `false` in the main cache only; valid content IDs have no entry here.
+A content ID's entry is in the file named by its first digit, so `0a1b…` is in `content_id_to_messages_0.jsonl`.
+The details are split across sixteen files because as one they passed GitHub's 100 MiB limit for a file.
+On `dist` they are `derivatives/content_id_to_messages_<x>.jsonl.gz`.
+Each line is one of:
 
 ```json
 {"<content_id>": {"messages": ["<NWB Inspector message>", ...]}}
