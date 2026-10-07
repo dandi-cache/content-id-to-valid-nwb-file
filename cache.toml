@@ -24,6 +24,12 @@ outputs = [
     "content_id_to_messages.jsonl",
 ]
 
+# Kept on `derivatives` as sixteen files, `content_id_to_messages_0.jsonl` to
+# `content_id_to_messages_f.jsonl`, by the first digit of the content ID. Its inspector messages
+# passed 100 MiB on 2026-10-07, after which every push of `derivatives` was refused. `dist` still
+# publishes it as the one `content_id_to_messages.jsonl.gz`, so no consumer URL changes.
+split = ["content_id_to_messages.jsonl"]
+
 # Upstream cache, registered as a DataLad input subdataset and pinned in every run's provenance,
 # so each result records the exact input commit it was computed from.
 [[inputs]]
