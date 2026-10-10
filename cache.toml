@@ -37,11 +37,17 @@ name = "content-id-to-nwb-file"
 
 # Streaming a whole NWB file and inspecting it is heavy, so a run advances the backlog by a bounded
 # batch rather than trying to clear it. An item costs about 4.4 s on a hosted runner (5 s at the
-# slow end), so 2500 is about three hours, leaving two of the job's 330-minute timeout as margin.
-# The margin matters, because a run that times out publishes nothing it did. Six runs a day (see
-# update.yml) then clear about 15000 items a day.
+# slow end), so 1000 is about an hour and a quarter, well inside the job's 330-minute timeout,
+# which matters because a run that times out publishes nothing it did.
+#
+# This was 2500 until a batch of it was killed for memory on 2026-10-09, losing the 2200 results it
+# had checkpointed: one process inspecting files grows about 5 MB for each, to 10 GB. Each file is
+# now opened and inspected in a child process, which returns all of its memory. The batch stays
+# smaller until the first runs show the parent staying flat, because a defect in that isolation
+# would record the whole batch as invalid. Raise it again after those runs; six runs a day clear
+# 6000 items a day at 1000, and 15000 at 2500.
 [operations.update]
-limit = 2500
+limit = 1000
 # A testing run streams a whole NWB file and runs the inspector over it, so two is already
 # minutes of work and exercises the resolve, the open, the inspection and all three writes.
 testing_limit = 2
