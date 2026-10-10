@@ -13,6 +13,7 @@ runtime image carries.
 """
 
 import datetime
+import traceback
 
 import dandi_cache_utils as dandi_cache
 
@@ -28,6 +29,26 @@ STAGES = {
 }
 
 
+# Opening and inspecting a file happens in a child process, one per file. HDF5, pynwb and the
+# inspector keep hold of memory that is never given back, about 5 MB for every file inspected in
+# one process: a batch of 2500 reached 10 GB and was killed on a 16 GB runner, losing the
+# 2200 results it had already checkpointed. A child that exits returns all of it. The slowest file
+# in two batches took 155 s, so this leaves a wide margin and only catches a stream that hangs.
+FILE_TIMEOUT_SECONDS = 900
+
+
+def _exception_like(type_name: str, message: str, details: str) -> Exception:
+    """An exception named and worded like one raised in a child process, which cannot cross back.
+
+    The error logs and the `{"error": ...}` recorded beside an invalid file are built from the
+    exception's type name and message, so they read as they always have. The child's traceback is
+    attached as a note, which the logs include and the one-line summary does not.
+    """
+    error = type(type_name, (Exception,), {})(message)
+    error.add_note(f"Raised in the child process:\n{details}")
+    return error
+
+
 def main(*, operation: str = "update") -> None:
     dataset, arguments = dandi_cache.open_dataset(operation=operation)
     nwb_files = dataset.read_input()
@@ -38,6 +59,30 @@ def main(*, operation: str = "update") -> None:
 
     resolver = dandi_cache.api.AssetResolver()
     inspector_config = dandi_cache.nwb.inspector_config()
+    # Loaded here, before any child is forked, so each child inherits them rather than importing
+    # them again for every file.
+    import h5py  # noqa: F401
+    import pynwb  # noqa: F401
+
+    try:
+        import hdmf_zarr  # noqa: F401
+    except ImportError:
+        pass
+
+    def open_and_inspect(url: str, path: str, /) -> tuple:
+        """Open one remote file and inspect it, in the child process; return plain data.
+
+        Forked, so `inspector_config` and the imported modules come from the parent already loaded.
+        A failure is returned with the stage it happened in, since an exception loses that on the
+        way back.
+        """
+        stage = "opening the NWB file"
+        try:
+            nwbfile, _io = dandi_cache.nwb.open_nwbfile(url, path)
+            stage = "running the NWB Inspector"
+            return ("ok", dandi_cache.nwb.inspect_nwbfile_object(nwbfile, config=inspector_config))
+        except Exception as error:
+            return ("failed", stage, type(error).__name__, str(error), traceback.format_exc())
 
     def record_assessment(content_id: str, /, *, reason: dict | None) -> None:
         """Stamp a content ID as assessed today, keeping the reason it is not valid, if it is not."""
@@ -56,11 +101,16 @@ def main(*, operation: str = "update") -> None:
         url = resolver.content_url(dandiset_id, path)
         item.context["URL"] = url
 
+        # A timeout or a child that died is logged with opening the file, which is where a stream
+        # that hangs or a file too large for memory shows up.
         item.stage = "opening the NWB file"
-        nwbfile, _io = dandi_cache.nwb.open_nwbfile(url, path)
-
-        item.stage = "running the NWB Inspector"
-        critical_messages = dandi_cache.nwb.inspect_nwbfile_object(nwbfile, config=inspector_config)
+        outcome = dandi_cache.run_isolated(
+            open_and_inspect, arguments=(url, path), timeout_seconds=FILE_TIMEOUT_SECONDS
+        )
+        if outcome[0] == "failed":
+            _, item.stage, type_name, message, details = outcome
+            raise _exception_like(type_name, message, details)
+        critical_messages = outcome[1]
 
         record_assessment(content_id, reason={"messages": critical_messages} if critical_messages else None)
         return not critical_messages
