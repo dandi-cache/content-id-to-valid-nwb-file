@@ -161,3 +161,24 @@ for chunk in sorted(chunks.iterdir(), key=lambda path: int(path.name)):
         if line.strip():
             content_id_to_valid_nwb_file.update(json.loads(line))
 ```
+
+
+## Reading the `derivatives` branch
+
+Each output is kept on the `derivatives` branch as a [Zarr](https://zarr.dev/) v3 store of JSON Lines: a one-dimensional `uint8` array whose bytes are the lines, padded with newlines to the end of its last chunk.
+A key recorded more than once keeps its last line, which the dictionary below does by itself.
+
+```python
+import json
+
+import zarr  # zarr>=3, with fsspec and aiohttp to read over HTTP
+
+url = "https://raw.githubusercontent.com/dandi-cache/content-id-to-valid-nwb-file/derivatives/derivatives/content_id_to_valid_nwb_file.zarr"
+stream = zarr.open_group(url, mode="r")["stream"]
+lines = stream[:].tobytes().decode("utf-8").splitlines()
+content_id_to_valid_nwb_file = {key: value for line in lines if line for key, value in json.loads(line).items()}
+```
+
+The other outputs, `content_id_to_checked_at.zarr` and `content_id_to_messages.zarr`, are stores beside it under the same `derivatives/` path.
+
+Without Zarr, each chunk is a plain file of whole lines at `derivatives/content_id_to_valid_nwb_file.zarr/stream/c/<n>`, read in order of `n`.
