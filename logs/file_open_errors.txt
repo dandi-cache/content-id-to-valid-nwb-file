@@ -1,655 +1,3 @@
-
-Error while opening the NWB file for `content_id='a6962a15-102a-4860-be80-6c30506aa879'` (dandiset ID 000045, path sub-ed8918e4-6a37-4b3d-9b4d-daa14eca0c70/sub-ed8918e4-6a37-4b3d-9b4d-daa14eca0c70_ses-e33a458d-60d6-4303-be3d-3ed0595bb137_behavior+image.nwb, URL https://dandiarchive.s3.amazonaws.com/blobs/a69/62a/a6962a15-102a-4860-be80-6c30506aa879)!
-
-<class 'hdmf.build.errors.ConstructError'>: (root/acquisition/_iblmic_audioSpectrogram/bands GroupBuilder {'attributes': {'colnames': array(['freq'], dtype=object), 'description': 'spectogram frequencies', 'namespace': 'core', 'neurodata_type': 'FrequencyBandsTable', 'object_id': 'ee65d37a-f295-47f1-ac1d-d452aa7e5781'}, 'groups': {}, 'datasets': {'freq': root/acquisition/_iblmic_audioSpectrogram/bands/freq DatasetBuilder {'attributes': {'description': 'frequency value', 'namespace': 'hdmf-common', 'neurodata_type': 'VectorData', 'object_id': '722dcc45-aed3-4c2d-a743-9a90c6d187cc'}, 'data': <HDF5 dataset "freq": shape (257,), type "<f4">}, 'id': root/acquisition/_iblmic_audioSpectrogram/bands/id DatasetBuilder {'attributes': {'namespace': 'hdmf-common', 'neurodata_type': 'ElementIdentifiers', 'object_id': 'ad6ed4d5-e5be-4ecc-bd57-2cae4da2b38e'}, 'data': <HDF5 dataset "id": shape (257,), type "<i4">}}, 'links': {}}, "Could not construct FrequencyBandsTable object due to: column must have the same number of rows as 'id'")
-
-Traceback (most recent call last):
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1612, in construct
-    obj = self.__new_container__(cls, builder.source, parent, builder.attributes.get(self.__spec.id_key()),
-                                 **kwargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1625, in __new_container__
-    obj.__init__(**kwargs)
-    ~~~~~~~~~~~~^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/pynwb/misc.py", line 392, in __init__
-    super().__init__(**kwargs)
-    ~~~~~~~~~~~~~~~~^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/common/table.py", line 561, in __init__
-    self._init_class_columns()
-    ~~~~~~~~~~~~~~~~~~~~~~~~^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/common/table.py", line 641, in _init_class_columns
-    self.add_column(name=col['name'],
-    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
-                    description=col['description'],
-                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    ...<4 lines>...
-                    **{k: col[k] for k in col.keys()
-                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                       if k not in DynamicTable.__reserved_colspec_keys})
-                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/common/table.py", line 1067, in add_column
-    raise ValueError("column must have the same number of rows as 'id'")
-ValueError: column must have the same number of rows as 'id'
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/code/_pipeline_common.py", line 85, in inspect_content_id
-    nwbfile = io.read()
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/pynwb/__init__.py", line 473, in read
-    file = super().read(**kwargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/backends/hdf5/h5tools.py", line 433, in read
-    return super().read(**kwargs)
-           ~~~~~~~~~~~~^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/backends/io.py", line 54, in read
-    container = self.__manager.construct(f_builder)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 300, in construct
-    result = self.__type_map.construct(builder, self, None)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 908, in construct
-    return obj_mapper.construct(builder, build_manager, parent)
-           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/pynwb/io/file.py", line 167, in construct
-    return super().construct(**kwargs)
-           ~~~~~~~~~~~~~~~~~^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1577, in construct
-    subspecs = self.__get_subspec_values(builder, self.spec, manager)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1442, in __get_subspec_values
-    self.__get_sub_builders(groups, spec.groups, manager, ret)
-    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1546, in __get_sub_builders
-    ret.update(self.__get_subspec_values(sub_builder, subspec, manager))
-               ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1442, in __get_subspec_values
-    self.__get_sub_builders(groups, spec.groups, manager, ret)
-    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1538, in __get_sub_builders
-    ret[subspec] = self.__flatten(matched, subspec, manager)
-                   ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1562, in __flatten
-    tmp = [manager.construct(b) for b in sub_builder]
-           ~~~~~~~~~~~~~~~~~^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 296, in construct
-    result = self.__type_map.construct(builder, self, parent)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 908, in construct
-    return obj_mapper.construct(builder, build_manager, parent)
-           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1577, in construct
-    subspecs = self.__get_subspec_values(builder, self.spec, manager)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1442, in __get_subspec_values
-    self.__get_sub_builders(groups, spec.groups, manager, ret)
-    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1548, in __get_sub_builders
-    ret[subspec] = manager.construct(sub_builder)
-                   ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 296, in construct
-    result = self.__type_map.construct(builder, self, parent)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 908, in construct
-    return obj_mapper.construct(builder, build_manager, parent)
-           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1616, in construct
-    raise ConstructError(builder, msg) from ex
-hdmf.build.errors.ConstructError: (root/acquisition/_iblmic_audioSpectrogram/bands GroupBuilder {'attributes': {'colnames': array(['freq'], dtype=object), 'description': 'spectogram frequencies', 'namespace': 'core', 'neurodata_type': 'FrequencyBandsTable', 'object_id': 'ee65d37a-f295-47f1-ac1d-d452aa7e5781'}, 'groups': {}, 'datasets': {'freq': root/acquisition/_iblmic_audioSpectrogram/bands/freq DatasetBuilder {'attributes': {'description': 'frequency value', 'namespace': 'hdmf-common', 'neurodata_type': 'VectorData', 'object_id': '722dcc45-aed3-4c2d-a743-9a90c6d187cc'}, 'data': <HDF5 dataset "freq": shape (257,), type "<f4">}, 'id': root/acquisition/_iblmic_audioSpectrogram/bands/id DatasetBuilder {'attributes': {'namespace': 'hdmf-common', 'neurodata_type': 'ElementIdentifiers', 'object_id': 'ad6ed4d5-e5be-4ecc-bd57-2cae4da2b38e'}, 'data': <HDF5 dataset "id": shape (257,), type "<i4">}}, 'links': {}}, "Could not construct FrequencyBandsTable object due to: column must have the same number of rows as 'id'")
-
-
-Error while opening the NWB file for `content_id='a8021f48-f8dd-487a-8b11-60fa8e977792'` (dandiset ID 001076, path sub-nan/sub-nan_ses-20230123T214030_obj-9yzhxv_ophys.nwb, URL https://dandiarchive.s3.amazonaws.com/blobs/a80/21f/a8021f48-f8dd-487a-8b11-60fa8e977792)!
-
-<class 'ValueError'>: Cannot resolve included group spec 'electrodes' with data_type_inc 'ElectrodesTable' because a group spec with the same name already exists with data_type_inc 'DynamicTable', and data type 'DynamicTable' is not a child type of data type 'ElectrodesTable'.
-
-Traceback (most recent call last):
-  File "/code/_pipeline_common.py", line 84, in inspect_content_id
-    io = pynwb.NWBHDF5IO(file=h5py_file, mode="r", load_namespaces=True)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/pynwb/__init__.py", line 412, in __init__
-    super().load_namespaces(tm, path, file=file_obj, driver=driver, aws_region=aws_region)
-    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/backends/hdf5/h5tools.py", line 198, in load_namespaces
-    return cls.__load_namespaces(namespace_catalog, namespaces, open_file_obj)
-           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/backends/hdf5/h5tools.py", line 232, in __load_namespaces
-    d = namespace_catalog.load_namespaces(cls.__ns_spec_path, reader=readers)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 520, in load_namespaces
-    types = self.__ns_catalog.load_namespaces(**kwargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/spec/namespace.py", line 768, in load_namespaces
-    self.resolve_all_specs()
-    ~~~~~~~~~~~~~~~~~~~~~~^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/spec/namespace.py", line 498, in resolve_all_specs
-    self.__resolve_namespace_specs(namespace)
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/spec/namespace.py", line 505, in __resolve_namespace_specs
-    self.__resolve_type_and_deps(type_name, namespace, resolved, in_progress)
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/spec/namespace.py", line 552, in __resolve_type_and_deps
-    spec.resolve_inc_spec(parent_spec, namespace)
-    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/spec/spec.py", line 1128, in resolve_inc_spec
-    self.__groups[group.name].resolve_inc_spec(group, namespace)
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/spec/spec.py", line 1128, in resolve_inc_spec
-    self.__groups[group.name].resolve_inc_spec(group, namespace)
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/spec/spec.py", line 1123, in resolve_inc_spec
-    raise ValueError(msg)
-ValueError: Cannot resolve included group spec 'electrodes' with data_type_inc 'ElectrodesTable' because a group spec with the same name already exists with data_type_inc 'DynamicTable', and data type 'DynamicTable' is not a child type of data type 'ElectrodesTable'.
-
-
-Error while opening the NWB file for `content_id='430f1b54-994f-47e6-8429-51a6f113e09d'` (dandiset ID 000045, path sub-898fb9e5-621a-41b1-8e19-651f32d8ac1d/sub-898fb9e5-621a-41b1-8e19-651f32d8ac1d_ses-879cd33b-c7c1-41d6-9b00-5b16d7631714_behavior+image.nwb, URL https://dandiarchive.s3.amazonaws.com/blobs/430/f1b/430f1b54-994f-47e6-8429-51a6f113e09d)!
-
-<class 'hdmf.build.errors.ConstructError'>: (root/acquisition/_iblmic_audioSpectrogram/bands GroupBuilder {'attributes': {'colnames': array(['freq'], dtype=object), 'description': 'spectogram frequencies', 'namespace': 'core', 'neurodata_type': 'FrequencyBandsTable', 'object_id': '632e074f-a1bb-4422-99af-494e8b2df101'}, 'groups': {}, 'datasets': {'freq': root/acquisition/_iblmic_audioSpectrogram/bands/freq DatasetBuilder {'attributes': {'description': 'frequency value', 'namespace': 'hdmf-common', 'neurodata_type': 'VectorData', 'object_id': 'e3c34154-8520-4e3d-90ae-52dc42841739'}, 'data': <HDF5 dataset "freq": shape (257,), type "<f4">}, 'id': root/acquisition/_iblmic_audioSpectrogram/bands/id DatasetBuilder {'attributes': {'namespace': 'hdmf-common', 'neurodata_type': 'ElementIdentifiers', 'object_id': '376f65b4-5389-40ed-8baf-ceda7f734556'}, 'data': <HDF5 dataset "id": shape (257,), type "<i4">}}, 'links': {}}, "Could not construct FrequencyBandsTable object due to: column must have the same number of rows as 'id'")
-
-Traceback (most recent call last):
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1612, in construct
-    obj = self.__new_container__(cls, builder.source, parent, builder.attributes.get(self.__spec.id_key()),
-                                 **kwargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1625, in __new_container__
-    obj.__init__(**kwargs)
-    ~~~~~~~~~~~~^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/pynwb/misc.py", line 392, in __init__
-    super().__init__(**kwargs)
-    ~~~~~~~~~~~~~~~~^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/common/table.py", line 561, in __init__
-    self._init_class_columns()
-    ~~~~~~~~~~~~~~~~~~~~~~~~^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/common/table.py", line 641, in _init_class_columns
-    self.add_column(name=col['name'],
-    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
-                    description=col['description'],
-                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    ...<4 lines>...
-                    **{k: col[k] for k in col.keys()
-                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                       if k not in DynamicTable.__reserved_colspec_keys})
-                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/common/table.py", line 1067, in add_column
-    raise ValueError("column must have the same number of rows as 'id'")
-ValueError: column must have the same number of rows as 'id'
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/code/_pipeline_common.py", line 85, in inspect_content_id
-    nwbfile = io.read()
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/pynwb/__init__.py", line 473, in read
-    file = super().read(**kwargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/backends/hdf5/h5tools.py", line 433, in read
-    return super().read(**kwargs)
-           ~~~~~~~~~~~~^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/backends/io.py", line 54, in read
-    container = self.__manager.construct(f_builder)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 300, in construct
-    result = self.__type_map.construct(builder, self, None)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 908, in construct
-    return obj_mapper.construct(builder, build_manager, parent)
-           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/pynwb/io/file.py", line 167, in construct
-    return super().construct(**kwargs)
-           ~~~~~~~~~~~~~~~~~^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1577, in construct
-    subspecs = self.__get_subspec_values(builder, self.spec, manager)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1442, in __get_subspec_values
-    self.__get_sub_builders(groups, spec.groups, manager, ret)
-    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1546, in __get_sub_builders
-    ret.update(self.__get_subspec_values(sub_builder, subspec, manager))
-               ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1442, in __get_subspec_values
-    self.__get_sub_builders(groups, spec.groups, manager, ret)
-    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1538, in __get_sub_builders
-    ret[subspec] = self.__flatten(matched, subspec, manager)
-                   ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1562, in __flatten
-    tmp = [manager.construct(b) for b in sub_builder]
-           ~~~~~~~~~~~~~~~~~^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 296, in construct
-    result = self.__type_map.construct(builder, self, parent)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 908, in construct
-    return obj_mapper.construct(builder, build_manager, parent)
-           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1577, in construct
-    subspecs = self.__get_subspec_values(builder, self.spec, manager)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1442, in __get_subspec_values
-    self.__get_sub_builders(groups, spec.groups, manager, ret)
-    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1548, in __get_sub_builders
-    ret[subspec] = manager.construct(sub_builder)
-                   ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 296, in construct
-    result = self.__type_map.construct(builder, self, parent)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 908, in construct
-    return obj_mapper.construct(builder, build_manager, parent)
-           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1616, in construct
-    raise ConstructError(builder, msg) from ex
-hdmf.build.errors.ConstructError: (root/acquisition/_iblmic_audioSpectrogram/bands GroupBuilder {'attributes': {'colnames': array(['freq'], dtype=object), 'description': 'spectogram frequencies', 'namespace': 'core', 'neurodata_type': 'FrequencyBandsTable', 'object_id': '632e074f-a1bb-4422-99af-494e8b2df101'}, 'groups': {}, 'datasets': {'freq': root/acquisition/_iblmic_audioSpectrogram/bands/freq DatasetBuilder {'attributes': {'description': 'frequency value', 'namespace': 'hdmf-common', 'neurodata_type': 'VectorData', 'object_id': 'e3c34154-8520-4e3d-90ae-52dc42841739'}, 'data': <HDF5 dataset "freq": shape (257,), type "<f4">}, 'id': root/acquisition/_iblmic_audioSpectrogram/bands/id DatasetBuilder {'attributes': {'namespace': 'hdmf-common', 'neurodata_type': 'ElementIdentifiers', 'object_id': '376f65b4-5389-40ed-8baf-ceda7f734556'}, 'data': <HDF5 dataset "id": shape (257,), type "<i4">}}, 'links': {}}, "Could not construct FrequencyBandsTable object due to: column must have the same number of rows as 'id'")
-
-
-Error while opening the NWB file for `content_id='ac369401-2c63-435d-9c99-24597d0f5ce7'` (dandiset ID 001632, path sub-3600sD-F2/sub-3600sD-F2_ses-day07.nwb, URL https://dandiarchive.s3.amazonaws.com/blobs/ac3/694/ac369401-2c63-435d-9c99-24597d0f5ce7)!
-
-<class 'hdmf.build.errors.ConstructError'>: (root/acquisition/event_code_meanings GroupBuilder {'attributes': {'colnames': array(['value', 'meaning'], dtype=object), 'description': 'Mapping integer event codes to event labels', 'namespace': 'ndx-events', 'neurodata_type': 'MeaningsTable', 'object_id': 'cf8d66f3-0818-49b7-b96e-6ad1d8470d61'}, 'groups': {}, 'datasets': {'id': root/acquisition/event_code_meanings/id DatasetBuilder {'attributes': {'namespace': 'hdmf-common', 'neurodata_type': 'ElementIdentifiers', 'object_id': 'ebeadabd-cf6e-4a14-93b4-85e20bdffa5f'}, 'data': <HDF5 dataset "id": shape (26,), type "<i8">}, 'meaning': root/acquisition/event_code_meanings/meaning DatasetBuilder {'attributes': {'description': 'The meaning of the value in the parent CategoricalVectorData object.', 'namespace': 'hdmf-experimental', 'neurodata_type': 'VectorData', 'object_id': '08c9731c-bd7c-4f1c-9c06-deefb5526789'}, 'data': <StrDataset for HDF5 dataset "meaning": shape (26,), type "|O">}, 'value': root/acquisition/event_code_meanings/value DatasetBuilder {'attributes': {'description': 'The value of the parent CategoricalVectorData object.', 'namespace': 'hdmf-experimental', 'neurodata_type': 'VectorData', 'object_id': '8860eef4-02e6-405f-a6f3-b96529d2db9f'}, 'data': <HDF5 dataset "value": shape (26,), type "<i8">}}, 'links': {}}, "Could not construct MeaningsTable object due to: MeaningsTable.__init__: missing argument 'target'")
-
-Traceback (most recent call last):
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1612, in construct
-    obj = self.__new_container__(cls, builder.source, parent, builder.attributes.get(self.__spec.id_key()),
-                                 **kwargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1625, in __new_container__
-    obj.__init__(**kwargs)
-    ~~~~~~~~~~~~^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 640, in func_call
-    pargs = _check_args(args, kwargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 633, in _check_args
-    raise ExceptionType(msg)
-TypeError: MeaningsTable.__init__: missing argument 'target'
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/code/_pipeline_common.py", line 85, in inspect_content_id
-    nwbfile = io.read()
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/pynwb/__init__.py", line 473, in read
-    file = super().read(**kwargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/backends/hdf5/h5tools.py", line 433, in read
-    return super().read(**kwargs)
-           ~~~~~~~~~~~~^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/backends/io.py", line 54, in read
-    container = self.__manager.construct(f_builder)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 300, in construct
-    result = self.__type_map.construct(builder, self, None)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 908, in construct
-    return obj_mapper.construct(builder, build_manager, parent)
-           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/pynwb/io/file.py", line 167, in construct
-    return super().construct(**kwargs)
-           ~~~~~~~~~~~~~~~~~^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1577, in construct
-    subspecs = self.__get_subspec_values(builder, self.spec, manager)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1442, in __get_subspec_values
-    self.__get_sub_builders(groups, spec.groups, manager, ret)
-    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1546, in __get_sub_builders
-    ret.update(self.__get_subspec_values(sub_builder, subspec, manager))
-               ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1442, in __get_subspec_values
-    self.__get_sub_builders(groups, spec.groups, manager, ret)
-    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1538, in __get_sub_builders
-    ret[subspec] = self.__flatten(matched, subspec, manager)
-                   ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1562, in __flatten
-    tmp = [manager.construct(b) for b in sub_builder]
-           ~~~~~~~~~~~~~~~~~^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 296, in construct
-    result = self.__type_map.construct(builder, self, parent)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 908, in construct
-    return obj_mapper.construct(builder, build_manager, parent)
-           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1616, in construct
-    raise ConstructError(builder, msg) from ex
-hdmf.build.errors.ConstructError: (root/acquisition/event_code_meanings GroupBuilder {'attributes': {'colnames': array(['value', 'meaning'], dtype=object), 'description': 'Mapping integer event codes to event labels', 'namespace': 'ndx-events', 'neurodata_type': 'MeaningsTable', 'object_id': 'cf8d66f3-0818-49b7-b96e-6ad1d8470d61'}, 'groups': {}, 'datasets': {'id': root/acquisition/event_code_meanings/id DatasetBuilder {'attributes': {'namespace': 'hdmf-common', 'neurodata_type': 'ElementIdentifiers', 'object_id': 'ebeadabd-cf6e-4a14-93b4-85e20bdffa5f'}, 'data': <HDF5 dataset "id": shape (26,), type "<i8">}, 'meaning': root/acquisition/event_code_meanings/meaning DatasetBuilder {'attributes': {'description': 'The meaning of the value in the parent CategoricalVectorData object.', 'namespace': 'hdmf-experimental', 'neurodata_type': 'VectorData', 'object_id': '08c9731c-bd7c-4f1c-9c06-deefb5526789'}, 'data': <StrDataset for HDF5 dataset "meaning": shape (26,), type "|O">}, 'value': root/acquisition/event_code_meanings/value DatasetBuilder {'attributes': {'description': 'The value of the parent CategoricalVectorData object.', 'namespace': 'hdmf-experimental', 'neurodata_type': 'VectorData', 'object_id': '8860eef4-02e6-405f-a6f3-b96529d2db9f'}, 'data': <HDF5 dataset "value": shape (26,), type "<i8">}}, 'links': {}}, "Could not construct MeaningsTable object due to: MeaningsTable.__init__: missing argument 'target'")
-
-
-Error while opening the NWB file for `content_id='faae83a5-9bbe-45d7-ae22-273a5c45865c'` (dandiset ID 000045, path sub-a96219e4-7f82-4572-bb38-83b84c5706ab/sub-a96219e4-7f82-4572-bb38-83b84c5706ab_ses-dbf800b4-37ba-4d2f-b24a-3633838f4ecd_behavior+image.nwb, URL https://dandiarchive.s3.amazonaws.com/blobs/faa/e83/faae83a5-9bbe-45d7-ae22-273a5c45865c)!
-
-<class 'hdmf.build.errors.ConstructError'>: (root/acquisition/_iblmic_audioSpectrogram/bands GroupBuilder {'attributes': {'colnames': array(['freq'], dtype=object), 'description': 'spectogram frequencies', 'namespace': 'core', 'neurodata_type': 'FrequencyBandsTable', 'object_id': 'e2d52e0d-8a43-453c-a4ae-f81bbb1f0294'}, 'groups': {}, 'datasets': {'freq': root/acquisition/_iblmic_audioSpectrogram/bands/freq DatasetBuilder {'attributes': {'description': 'frequency value', 'namespace': 'hdmf-common', 'neurodata_type': 'VectorData', 'object_id': 'd4186d20-705f-46e7-9c22-6d1074aa82bd'}, 'data': <HDF5 dataset "freq": shape (257,), type "<f4">}, 'id': root/acquisition/_iblmic_audioSpectrogram/bands/id DatasetBuilder {'attributes': {'namespace': 'hdmf-common', 'neurodata_type': 'ElementIdentifiers', 'object_id': 'f42d86ce-53dd-452a-b231-c7b979f9369b'}, 'data': <HDF5 dataset "id": shape (257,), type "<i4">}}, 'links': {}}, "Could not construct FrequencyBandsTable object due to: column must have the same number of rows as 'id'")
-
-Traceback (most recent call last):
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1612, in construct
-    obj = self.__new_container__(cls, builder.source, parent, builder.attributes.get(self.__spec.id_key()),
-                                 **kwargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1625, in __new_container__
-    obj.__init__(**kwargs)
-    ~~~~~~~~~~~~^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/pynwb/misc.py", line 392, in __init__
-    super().__init__(**kwargs)
-    ~~~~~~~~~~~~~~~~^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/common/table.py", line 561, in __init__
-    self._init_class_columns()
-    ~~~~~~~~~~~~~~~~~~~~~~~~^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/common/table.py", line 641, in _init_class_columns
-    self.add_column(name=col['name'],
-    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
-                    description=col['description'],
-                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    ...<4 lines>...
-                    **{k: col[k] for k in col.keys()
-                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                       if k not in DynamicTable.__reserved_colspec_keys})
-                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/common/table.py", line 1067, in add_column
-    raise ValueError("column must have the same number of rows as 'id'")
-ValueError: column must have the same number of rows as 'id'
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/code/_pipeline_common.py", line 85, in inspect_content_id
-    nwbfile = io.read()
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/pynwb/__init__.py", line 473, in read
-    file = super().read(**kwargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/backends/hdf5/h5tools.py", line 433, in read
-    return super().read(**kwargs)
-           ~~~~~~~~~~~~^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/backends/io.py", line 54, in read
-    container = self.__manager.construct(f_builder)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 300, in construct
-    result = self.__type_map.construct(builder, self, None)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 908, in construct
-    return obj_mapper.construct(builder, build_manager, parent)
-           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/pynwb/io/file.py", line 167, in construct
-    return super().construct(**kwargs)
-           ~~~~~~~~~~~~~~~~~^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1577, in construct
-    subspecs = self.__get_subspec_values(builder, self.spec, manager)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1442, in __get_subspec_values
-    self.__get_sub_builders(groups, spec.groups, manager, ret)
-    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1546, in __get_sub_builders
-    ret.update(self.__get_subspec_values(sub_builder, subspec, manager))
-               ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1442, in __get_subspec_values
-    self.__get_sub_builders(groups, spec.groups, manager, ret)
-    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1538, in __get_sub_builders
-    ret[subspec] = self.__flatten(matched, subspec, manager)
-                   ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1562, in __flatten
-    tmp = [manager.construct(b) for b in sub_builder]
-           ~~~~~~~~~~~~~~~~~^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 296, in construct
-    result = self.__type_map.construct(builder, self, parent)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 908, in construct
-    return obj_mapper.construct(builder, build_manager, parent)
-           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1577, in construct
-    subspecs = self.__get_subspec_values(builder, self.spec, manager)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1442, in __get_subspec_values
-    self.__get_sub_builders(groups, spec.groups, manager, ret)
-    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1548, in __get_sub_builders
-    ret[subspec] = manager.construct(sub_builder)
-                   ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 296, in construct
-    result = self.__type_map.construct(builder, self, parent)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 908, in construct
-    return obj_mapper.construct(builder, build_manager, parent)
-           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1616, in construct
-    raise ConstructError(builder, msg) from ex
-hdmf.build.errors.ConstructError: (root/acquisition/_iblmic_audioSpectrogram/bands GroupBuilder {'attributes': {'colnames': array(['freq'], dtype=object), 'description': 'spectogram frequencies', 'namespace': 'core', 'neurodata_type': 'FrequencyBandsTable', 'object_id': 'e2d52e0d-8a43-453c-a4ae-f81bbb1f0294'}, 'groups': {}, 'datasets': {'freq': root/acquisition/_iblmic_audioSpectrogram/bands/freq DatasetBuilder {'attributes': {'description': 'frequency value', 'namespace': 'hdmf-common', 'neurodata_type': 'VectorData', 'object_id': 'd4186d20-705f-46e7-9c22-6d1074aa82bd'}, 'data': <HDF5 dataset "freq": shape (257,), type "<f4">}, 'id': root/acquisition/_iblmic_audioSpectrogram/bands/id DatasetBuilder {'attributes': {'namespace': 'hdmf-common', 'neurodata_type': 'ElementIdentifiers', 'object_id': 'f42d86ce-53dd-452a-b231-c7b979f9369b'}, 'data': <HDF5 dataset "id": shape (257,), type "<i4">}}, 'links': {}}, "Could not construct FrequencyBandsTable object due to: column must have the same number of rows as 'id'")
-
-
-Error while opening the NWB file for `content_id='c9771c92-7f78-4072-994a-576ad66aff66'` (dandiset ID 000045, path sub-dffc24bc-bd97-4c2a-bef3-3e9320dc3dd7/sub-dffc24bc-bd97-4c2a-bef3-3e9320dc3dd7_ses-41b855bd-4ad2-47f3-a919-aa1dba44faf7_behavior+image.nwb, URL https://dandiarchive.s3.amazonaws.com/blobs/c97/71c/c9771c92-7f78-4072-994a-576ad66aff66)!
-
-<class 'hdmf.build.errors.ConstructError'>: (root/acquisition/_iblmic_audioSpectrogram/bands GroupBuilder {'attributes': {'colnames': array(['freq'], dtype=object), 'description': 'spectogram frequencies', 'namespace': 'core', 'neurodata_type': 'FrequencyBandsTable', 'object_id': 'cd0b1911-669e-4510-82b9-0e6132ac8a3c'}, 'groups': {}, 'datasets': {'freq': root/acquisition/_iblmic_audioSpectrogram/bands/freq DatasetBuilder {'attributes': {'description': 'frequency value', 'namespace': 'hdmf-common', 'neurodata_type': 'VectorData', 'object_id': '6213fa28-2e29-4b9d-88fe-2dcbbc6f2b3e'}, 'data': <HDF5 dataset "freq": shape (257,), type "<f4">}, 'id': root/acquisition/_iblmic_audioSpectrogram/bands/id DatasetBuilder {'attributes': {'namespace': 'hdmf-common', 'neurodata_type': 'ElementIdentifiers', 'object_id': '2eae515a-c4b7-4846-8fca-ddf822e72c43'}, 'data': <HDF5 dataset "id": shape (257,), type "<i4">}}, 'links': {}}, "Could not construct FrequencyBandsTable object due to: column must have the same number of rows as 'id'")
-
-Traceback (most recent call last):
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1612, in construct
-    obj = self.__new_container__(cls, builder.source, parent, builder.attributes.get(self.__spec.id_key()),
-                                 **kwargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1625, in __new_container__
-    obj.__init__(**kwargs)
-    ~~~~~~~~~~~~^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/pynwb/misc.py", line 392, in __init__
-    super().__init__(**kwargs)
-    ~~~~~~~~~~~~~~~~^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/common/table.py", line 561, in __init__
-    self._init_class_columns()
-    ~~~~~~~~~~~~~~~~~~~~~~~~^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/common/table.py", line 641, in _init_class_columns
-    self.add_column(name=col['name'],
-    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
-                    description=col['description'],
-                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    ...<4 lines>...
-                    **{k: col[k] for k in col.keys()
-                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                       if k not in DynamicTable.__reserved_colspec_keys})
-                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/common/table.py", line 1067, in add_column
-    raise ValueError("column must have the same number of rows as 'id'")
-ValueError: column must have the same number of rows as 'id'
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/code/_pipeline_common.py", line 85, in inspect_content_id
-    nwbfile = io.read()
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/pynwb/__init__.py", line 473, in read
-    file = super().read(**kwargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/backends/hdf5/h5tools.py", line 433, in read
-    return super().read(**kwargs)
-           ~~~~~~~~~~~~^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/backends/io.py", line 54, in read
-    container = self.__manager.construct(f_builder)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 300, in construct
-    result = self.__type_map.construct(builder, self, None)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 908, in construct
-    return obj_mapper.construct(builder, build_manager, parent)
-           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/pynwb/io/file.py", line 167, in construct
-    return super().construct(**kwargs)
-           ~~~~~~~~~~~~~~~~~^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1577, in construct
-    subspecs = self.__get_subspec_values(builder, self.spec, manager)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1442, in __get_subspec_values
-    self.__get_sub_builders(groups, spec.groups, manager, ret)
-    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1546, in __get_sub_builders
-    ret.update(self.__get_subspec_values(sub_builder, subspec, manager))
-               ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1442, in __get_subspec_values
-    self.__get_sub_builders(groups, spec.groups, manager, ret)
-    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1538, in __get_sub_builders
-    ret[subspec] = self.__flatten(matched, subspec, manager)
-                   ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1562, in __flatten
-    tmp = [manager.construct(b) for b in sub_builder]
-           ~~~~~~~~~~~~~~~~~^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 296, in construct
-    result = self.__type_map.construct(builder, self, parent)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 908, in construct
-    return obj_mapper.construct(builder, build_manager, parent)
-           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1577, in construct
-    subspecs = self.__get_subspec_values(builder, self.spec, manager)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1442, in __get_subspec_values
-    self.__get_sub_builders(groups, spec.groups, manager, ret)
-    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1548, in __get_sub_builders
-    ret[subspec] = manager.construct(sub_builder)
-                   ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 296, in construct
-    result = self.__type_map.construct(builder, self, parent)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 908, in construct
-    return obj_mapper.construct(builder, build_manager, parent)
-           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1616, in construct
-    raise ConstructError(builder, msg) from ex
-hdmf.build.errors.ConstructError: (root/acquisition/_iblmic_audioSpectrogram/bands GroupBuilder {'attributes': {'colnames': array(['freq'], dtype=object), 'description': 'spectogram frequencies', 'namespace': 'core', 'neurodata_type': 'FrequencyBandsTable', 'object_id': 'cd0b1911-669e-4510-82b9-0e6132ac8a3c'}, 'groups': {}, 'datasets': {'freq': root/acquisition/_iblmic_audioSpectrogram/bands/freq DatasetBuilder {'attributes': {'description': 'frequency value', 'namespace': 'hdmf-common', 'neurodata_type': 'VectorData', 'object_id': '6213fa28-2e29-4b9d-88fe-2dcbbc6f2b3e'}, 'data': <HDF5 dataset "freq": shape (257,), type "<f4">}, 'id': root/acquisition/_iblmic_audioSpectrogram/bands/id DatasetBuilder {'attributes': {'namespace': 'hdmf-common', 'neurodata_type': 'ElementIdentifiers', 'object_id': '2eae515a-c4b7-4846-8fca-ddf822e72c43'}, 'data': <HDF5 dataset "id": shape (257,), type "<i4">}}, 'links': {}}, "Could not construct FrequencyBandsTable object due to: column must have the same number of rows as 'id'")
-
-
-Error while opening the NWB file for `content_id='b3dcf090-2a39-47ee-bc89-220170dc889a'` (dandiset ID 000045, path sub-fdfa9a26-75fd-49c4-a4ed-1768cfd861ca/sub-fdfa9a26-75fd-49c4-a4ed-1768cfd861ca_ses-438ed92a-5bfe-4fe7-b521-d79a630f4224_behavior+image.nwb, URL https://dandiarchive.s3.amazonaws.com/blobs/b3d/cf0/b3dcf090-2a39-47ee-bc89-220170dc889a)!
-
-<class 'hdmf.build.errors.ConstructError'>: (root/acquisition/_iblmic_audioSpectrogram/bands GroupBuilder {'attributes': {'colnames': array(['freq'], dtype=object), 'description': 'spectogram frequencies', 'namespace': 'core', 'neurodata_type': 'FrequencyBandsTable', 'object_id': '418264e5-96b9-49c7-b7e3-55c5b0547e16'}, 'groups': {}, 'datasets': {'freq': root/acquisition/_iblmic_audioSpectrogram/bands/freq DatasetBuilder {'attributes': {'description': 'frequency value', 'namespace': 'hdmf-common', 'neurodata_type': 'VectorData', 'object_id': '9011742c-de06-4647-af07-54b91989aaff'}, 'data': <HDF5 dataset "freq": shape (257,), type "<f4">}, 'id': root/acquisition/_iblmic_audioSpectrogram/bands/id DatasetBuilder {'attributes': {'namespace': 'hdmf-common', 'neurodata_type': 'ElementIdentifiers', 'object_id': 'e5baf9ed-ebb3-41cf-a147-09ec0220928e'}, 'data': <HDF5 dataset "id": shape (257,), type "<i4">}}, 'links': {}}, "Could not construct FrequencyBandsTable object due to: column must have the same number of rows as 'id'")
-
-Traceback (most recent call last):
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1612, in construct
-    obj = self.__new_container__(cls, builder.source, parent, builder.attributes.get(self.__spec.id_key()),
-                                 **kwargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1625, in __new_container__
-    obj.__init__(**kwargs)
-    ~~~~~~~~~~~~^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/pynwb/misc.py", line 392, in __init__
-    super().__init__(**kwargs)
-    ~~~~~~~~~~~~~~~~^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/common/table.py", line 561, in __init__
-    self._init_class_columns()
-    ~~~~~~~~~~~~~~~~~~~~~~~~^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/common/table.py", line 641, in _init_class_columns
-    self.add_column(name=col['name'],
-    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
-                    description=col['description'],
-                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    ...<4 lines>...
-                    **{k: col[k] for k in col.keys()
-                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                       if k not in DynamicTable.__reserved_colspec_keys})
-                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
-    return func(args[0], **pargs)
-  File "/opt/venv/lib/python3.13/site-packages/hdmf/common/table.py", line 1067, in add_column
-    raise ValueError("column must have the same number of rows as 'id'")
-ValueError: column must have the same number of rows as 'id'
-
 The above exception was the direct cause of the following exception:
 
 Traceback (most recent call last):
@@ -956995,6 +956343,604 @@ Traceback (most recent call last):
   File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1655, in construct
     raise ConstructError(builder, msg) from ex
 hdmf.build.errors.ConstructError: (root/acquisition/_iblmic_audioSpectrogram/bands GroupBuilder {'attributes': {'colnames': array(['freq'], dtype=object), 'description': 'spectogram frequencies', 'namespace': 'core', 'neurodata_type': 'FrequencyBandsTable', 'object_id': '517cdb3d-727c-4e3d-9ba1-937e8cd8a238'}, 'groups': {}, 'datasets': {'freq': root/acquisition/_iblmic_audioSpectrogram/bands/freq DatasetBuilder {'attributes': {'description': 'frequency value', 'namespace': 'hdmf-common', 'neurodata_type': 'VectorData', 'object_id': '5e4f47b2-5677-4080-97aa-bfeb6812ca1c'}, 'data': <HDF5 dataset "freq": shape (257,), type "<f4">}, 'id': root/acquisition/_iblmic_audioSpectrogram/bands/id DatasetBuilder {'attributes': {'namespace': 'hdmf-common', 'neurodata_type': 'ElementIdentifiers', 'object_id': '11d8d605-52f4-4364-8c8b-6453eca21d46'}, 'data': <HDF5 dataset "id": shape (257,), type "<i4">}}, 'links': {}}, "Could not construct FrequencyBandsTable object due to: column must have the same number of rows as 'id'")
+
+
+
+Error while opening the NWB file for `ffc11fa2-b1e5-4941-aae9-34af9d29996f` (dandiset ID 000045, path sub-fc392f4d-3d80-4460-ae28-f2775919bd1f/sub-fc392f4d-3d80-4460-ae28-f2775919bd1f_ses-40bf0760-96a1-4450-b1b1-1af988ec9bec_behavior+image.nwb, URL https://dandiarchive.s3.amazonaws.com/blobs/ffc/11f/ffc11fa2-b1e5-4941-aae9-34af9d29996f)!
+
+<class '__main__.ConstructError'>: (root/acquisition/_iblmic_audioSpectrogram/bands GroupBuilder {'attributes': {'colnames': array(['freq'], dtype=object), 'description': 'spectogram frequencies', 'namespace': 'core', 'neurodata_type': 'FrequencyBandsTable', 'object_id': 'f96380fb-8443-43a5-be97-66591ddf2865'}, 'groups': {}, 'datasets': {'freq': root/acquisition/_iblmic_audioSpectrogram/bands/freq DatasetBuilder {'attributes': {'description': 'frequency value', 'namespace': 'hdmf-common', 'neurodata_type': 'VectorData', 'object_id': '70aaa761-79e1-4667-8ff8-8a24aca3cac2'}, 'data': <HDF5 dataset "freq": shape (257,), type "<f4">}, 'id': root/acquisition/_iblmic_audioSpectrogram/bands/id DatasetBuilder {'attributes': {'namespace': 'hdmf-common', 'neurodata_type': 'ElementIdentifiers', 'object_id': 'dca5f418-db32-41d7-89f5-cf220beb1ee2'}, 'data': <HDF5 dataset "id": shape (257,), type "<i4">}}, 'links': {}}, "Could not construct FrequencyBandsTable object due to: column must have the same number of rows as 'id'")
+
+Traceback (most recent call last):
+  File "/opt/venv/lib/python3.13/site-packages/dandi_cache_utils/_runner.py", line 230, in attempt
+    value = process(item, scope) if takes_scope else process(item)
+            ~~~~~~~^^^^^^^^^^^^^
+  File "/workspace/code/update.py", line 112, in assess
+    raise _exception_like(type_name, message, details)
+ConstructError: (root/acquisition/_iblmic_audioSpectrogram/bands GroupBuilder {'attributes': {'colnames': array(['freq'], dtype=object), 'description': 'spectogram frequencies', 'namespace': 'core', 'neurodata_type': 'FrequencyBandsTable', 'object_id': 'f96380fb-8443-43a5-be97-66591ddf2865'}, 'groups': {}, 'datasets': {'freq': root/acquisition/_iblmic_audioSpectrogram/bands/freq DatasetBuilder {'attributes': {'description': 'frequency value', 'namespace': 'hdmf-common', 'neurodata_type': 'VectorData', 'object_id': '70aaa761-79e1-4667-8ff8-8a24aca3cac2'}, 'data': <HDF5 dataset "freq": shape (257,), type "<f4">}, 'id': root/acquisition/_iblmic_audioSpectrogram/bands/id DatasetBuilder {'attributes': {'namespace': 'hdmf-common', 'neurodata_type': 'ElementIdentifiers', 'object_id': 'dca5f418-db32-41d7-89f5-cf220beb1ee2'}, 'data': <HDF5 dataset "id": shape (257,), type "<i4">}}, 'links': {}}, "Could not construct FrequencyBandsTable object due to: column must have the same number of rows as 'id'")
+Raised in the child process:
+Traceback (most recent call last):
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1651, in construct
+    obj = self.__new_container__(cls, builder.source, parent, builder.attributes.get(self.__spec.id_key()),
+                                 **kwargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1664, in __new_container__
+    obj.__init__(**kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/pynwb/misc.py", line 401, in __init__
+    super().__init__(**kwargs)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/common/table.py", line 565, in __init__
+    self._init_class_columns()
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/common/table.py", line 649, in _init_class_columns
+    self.add_column(name=col['name'],
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+                    description=col['description'],
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+                    **{k: col[k] for k in col.keys()
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                       if k not in DynamicTable.__reserved_colspec_keys})
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/common/table.py", line 1103, in add_column
+    raise ValueError("column must have the same number of rows as 'id'")
+ValueError: column must have the same number of rows as 'id'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/workspace/code/update.py", line 81, in open_and_inspect
+    nwbfile, _io = dandi_cache.nwb.open_nwbfile(url, path)
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/dandi_cache_utils/nwb.py", line 171, in open_nwbfile
+    return io.read(), io
+           ~~~~~~~^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/pynwb/__init__.py", line 473, in read
+    file = super().read(**kwargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/backends/hdf5/h5tools.py", line 433, in read
+    return super().read(**kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/backends/io.py", line 72, in read
+    container = self.__manager.construct(f_builder)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 300, in construct
+    result = self.__type_map.construct(builder, self, None)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 908, in construct
+    return obj_mapper.construct(builder, build_manager, parent)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/pynwb/io/file.py", line 166, in construct
+    return super().construct(**kwargs)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1604, in construct
+    subspecs = self.__get_subspec_values(builder, self.spec, manager)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1469, in __get_subspec_values
+    self.__get_sub_builders(groups, spec.groups, manager, ret)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1573, in __get_sub_builders
+    ret.update(self.__get_subspec_values(sub_builder, subspec, manager))
+               ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1469, in __get_subspec_values
+    self.__get_sub_builders(groups, spec.groups, manager, ret)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1565, in __get_sub_builders
+    ret[subspec] = self.__flatten(matched, subspec, manager)
+                   ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1589, in __flatten
+    tmp = [manager.construct(b) for b in sub_builder]
+           ~~~~~~~~~~~~~~~~~^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 296, in construct
+    result = self.__type_map.construct(builder, self, parent)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 908, in construct
+    return obj_mapper.construct(builder, build_manager, parent)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1604, in construct
+    subspecs = self.__get_subspec_values(builder, self.spec, manager)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1469, in __get_subspec_values
+    self.__get_sub_builders(groups, spec.groups, manager, ret)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1575, in __get_sub_builders
+    ret[subspec] = manager.construct(sub_builder)
+                   ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 296, in construct
+    result = self.__type_map.construct(builder, self, parent)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 908, in construct
+    return obj_mapper.construct(builder, build_manager, parent)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1655, in construct
+    raise ConstructError(builder, msg) from ex
+hdmf.build.errors.ConstructError: (root/acquisition/_iblmic_audioSpectrogram/bands GroupBuilder {'attributes': {'colnames': array(['freq'], dtype=object), 'description': 'spectogram frequencies', 'namespace': 'core', 'neurodata_type': 'FrequencyBandsTable', 'object_id': 'f96380fb-8443-43a5-be97-66591ddf2865'}, 'groups': {}, 'datasets': {'freq': root/acquisition/_iblmic_audioSpectrogram/bands/freq DatasetBuilder {'attributes': {'description': 'frequency value', 'namespace': 'hdmf-common', 'neurodata_type': 'VectorData', 'object_id': '70aaa761-79e1-4667-8ff8-8a24aca3cac2'}, 'data': <HDF5 dataset "freq": shape (257,), type "<f4">}, 'id': root/acquisition/_iblmic_audioSpectrogram/bands/id DatasetBuilder {'attributes': {'namespace': 'hdmf-common', 'neurodata_type': 'ElementIdentifiers', 'object_id': 'dca5f418-db32-41d7-89f5-cf220beb1ee2'}, 'data': <HDF5 dataset "id": shape (257,), type "<i4">}}, 'links': {}}, "Could not construct FrequencyBandsTable object due to: column must have the same number of rows as 'id'")
+
+
+
+Error while opening the NWB file for `ffd1c5a5-4267-4eee-a5ff-410d15f72233` (dandiset ID 000045, path sub-cff66dc1-765e-4e04-abef-92de05bf4f19/sub-cff66dc1-765e-4e04-abef-92de05bf4f19_ses-816b877a-a804-4bb0-a302-7169ed2d1379_behavior+image.nwb, URL https://dandiarchive.s3.amazonaws.com/blobs/ffd/1c5/ffd1c5a5-4267-4eee-a5ff-410d15f72233)!
+
+<class '__main__.ConstructError'>: (root/acquisition/_iblmic_audioSpectrogram/bands GroupBuilder {'attributes': {'colnames': array(['freq'], dtype=object), 'description': 'spectogram frequencies', 'namespace': 'core', 'neurodata_type': 'FrequencyBandsTable', 'object_id': '653bc459-2ee9-4d34-8c65-e04262011891'}, 'groups': {}, 'datasets': {'freq': root/acquisition/_iblmic_audioSpectrogram/bands/freq DatasetBuilder {'attributes': {'description': 'frequency value', 'namespace': 'hdmf-common', 'neurodata_type': 'VectorData', 'object_id': '24df6a14-5a11-4a03-a495-efaf77576ab5'}, 'data': <HDF5 dataset "freq": shape (257,), type "<f4">}, 'id': root/acquisition/_iblmic_audioSpectrogram/bands/id DatasetBuilder {'attributes': {'namespace': 'hdmf-common', 'neurodata_type': 'ElementIdentifiers', 'object_id': '003e63b4-5bac-4273-bfc0-d40b25a67a98'}, 'data': <HDF5 dataset "id": shape (257,), type "<i4">}}, 'links': {}}, "Could not construct FrequencyBandsTable object due to: column must have the same number of rows as 'id'")
+
+Traceback (most recent call last):
+  File "/opt/venv/lib/python3.13/site-packages/dandi_cache_utils/_runner.py", line 230, in attempt
+    value = process(item, scope) if takes_scope else process(item)
+            ~~~~~~~^^^^^^^^^^^^^
+  File "/workspace/code/update.py", line 112, in assess
+    raise _exception_like(type_name, message, details)
+ConstructError: (root/acquisition/_iblmic_audioSpectrogram/bands GroupBuilder {'attributes': {'colnames': array(['freq'], dtype=object), 'description': 'spectogram frequencies', 'namespace': 'core', 'neurodata_type': 'FrequencyBandsTable', 'object_id': '653bc459-2ee9-4d34-8c65-e04262011891'}, 'groups': {}, 'datasets': {'freq': root/acquisition/_iblmic_audioSpectrogram/bands/freq DatasetBuilder {'attributes': {'description': 'frequency value', 'namespace': 'hdmf-common', 'neurodata_type': 'VectorData', 'object_id': '24df6a14-5a11-4a03-a495-efaf77576ab5'}, 'data': <HDF5 dataset "freq": shape (257,), type "<f4">}, 'id': root/acquisition/_iblmic_audioSpectrogram/bands/id DatasetBuilder {'attributes': {'namespace': 'hdmf-common', 'neurodata_type': 'ElementIdentifiers', 'object_id': '003e63b4-5bac-4273-bfc0-d40b25a67a98'}, 'data': <HDF5 dataset "id": shape (257,), type "<i4">}}, 'links': {}}, "Could not construct FrequencyBandsTable object due to: column must have the same number of rows as 'id'")
+Raised in the child process:
+Traceback (most recent call last):
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1651, in construct
+    obj = self.__new_container__(cls, builder.source, parent, builder.attributes.get(self.__spec.id_key()),
+                                 **kwargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1664, in __new_container__
+    obj.__init__(**kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/pynwb/misc.py", line 401, in __init__
+    super().__init__(**kwargs)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/common/table.py", line 565, in __init__
+    self._init_class_columns()
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/common/table.py", line 649, in _init_class_columns
+    self.add_column(name=col['name'],
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+                    description=col['description'],
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+                    **{k: col[k] for k in col.keys()
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                       if k not in DynamicTable.__reserved_colspec_keys})
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/common/table.py", line 1103, in add_column
+    raise ValueError("column must have the same number of rows as 'id'")
+ValueError: column must have the same number of rows as 'id'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/workspace/code/update.py", line 81, in open_and_inspect
+    nwbfile, _io = dandi_cache.nwb.open_nwbfile(url, path)
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/dandi_cache_utils/nwb.py", line 171, in open_nwbfile
+    return io.read(), io
+           ~~~~~~~^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/pynwb/__init__.py", line 473, in read
+    file = super().read(**kwargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/backends/hdf5/h5tools.py", line 433, in read
+    return super().read(**kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/backends/io.py", line 72, in read
+    container = self.__manager.construct(f_builder)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 300, in construct
+    result = self.__type_map.construct(builder, self, None)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 908, in construct
+    return obj_mapper.construct(builder, build_manager, parent)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/pynwb/io/file.py", line 166, in construct
+    return super().construct(**kwargs)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1604, in construct
+    subspecs = self.__get_subspec_values(builder, self.spec, manager)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1469, in __get_subspec_values
+    self.__get_sub_builders(groups, spec.groups, manager, ret)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1573, in __get_sub_builders
+    ret.update(self.__get_subspec_values(sub_builder, subspec, manager))
+               ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1469, in __get_subspec_values
+    self.__get_sub_builders(groups, spec.groups, manager, ret)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1565, in __get_sub_builders
+    ret[subspec] = self.__flatten(matched, subspec, manager)
+                   ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1589, in __flatten
+    tmp = [manager.construct(b) for b in sub_builder]
+           ~~~~~~~~~~~~~~~~~^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 296, in construct
+    result = self.__type_map.construct(builder, self, parent)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 908, in construct
+    return obj_mapper.construct(builder, build_manager, parent)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1604, in construct
+    subspecs = self.__get_subspec_values(builder, self.spec, manager)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1469, in __get_subspec_values
+    self.__get_sub_builders(groups, spec.groups, manager, ret)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1575, in __get_sub_builders
+    ret[subspec] = manager.construct(sub_builder)
+                   ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 296, in construct
+    result = self.__type_map.construct(builder, self, parent)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 908, in construct
+    return obj_mapper.construct(builder, build_manager, parent)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1655, in construct
+    raise ConstructError(builder, msg) from ex
+hdmf.build.errors.ConstructError: (root/acquisition/_iblmic_audioSpectrogram/bands GroupBuilder {'attributes': {'colnames': array(['freq'], dtype=object), 'description': 'spectogram frequencies', 'namespace': 'core', 'neurodata_type': 'FrequencyBandsTable', 'object_id': '653bc459-2ee9-4d34-8c65-e04262011891'}, 'groups': {}, 'datasets': {'freq': root/acquisition/_iblmic_audioSpectrogram/bands/freq DatasetBuilder {'attributes': {'description': 'frequency value', 'namespace': 'hdmf-common', 'neurodata_type': 'VectorData', 'object_id': '24df6a14-5a11-4a03-a495-efaf77576ab5'}, 'data': <HDF5 dataset "freq": shape (257,), type "<f4">}, 'id': root/acquisition/_iblmic_audioSpectrogram/bands/id DatasetBuilder {'attributes': {'namespace': 'hdmf-common', 'neurodata_type': 'ElementIdentifiers', 'object_id': '003e63b4-5bac-4273-bfc0-d40b25a67a98'}, 'data': <HDF5 dataset "id": shape (257,), type "<i4">}}, 'links': {}}, "Could not construct FrequencyBandsTable object due to: column must have the same number of rows as 'id'")
+
+
+
+Error while opening the NWB file for `ffd83073-4bfb-4a85-a183-07c8d45f17ab` (dandiset ID 000045, path sub-3eee82bf-8ccf-42ac-9e26-472caed5f265/sub-3eee82bf-8ccf-42ac-9e26-472caed5f265_ses-8078b885-33d1-40ab-915c-6a1405f29e98_behavior+image.nwb, URL https://dandiarchive.s3.amazonaws.com/blobs/ffd/830/ffd83073-4bfb-4a85-a183-07c8d45f17ab)!
+
+<class '__main__.ConstructError'>: (root/acquisition/_iblmic_audioSpectrogram/bands GroupBuilder {'attributes': {'colnames': array(['freq'], dtype=object), 'description': 'spectogram frequencies', 'namespace': 'core', 'neurodata_type': 'FrequencyBandsTable', 'object_id': '9742cd8d-0d76-43bf-8dea-3d32e1daaaa2'}, 'groups': {}, 'datasets': {'freq': root/acquisition/_iblmic_audioSpectrogram/bands/freq DatasetBuilder {'attributes': {'description': 'frequency value', 'namespace': 'hdmf-common', 'neurodata_type': 'VectorData', 'object_id': '6db12b92-4ca2-47e0-837c-8249ad7399b2'}, 'data': <HDF5 dataset "freq": shape (257,), type "<f4">}, 'id': root/acquisition/_iblmic_audioSpectrogram/bands/id DatasetBuilder {'attributes': {'namespace': 'hdmf-common', 'neurodata_type': 'ElementIdentifiers', 'object_id': '2ad29124-75fa-4c0f-89f6-fa79395eeca7'}, 'data': <HDF5 dataset "id": shape (257,), type "<i4">}}, 'links': {}}, "Could not construct FrequencyBandsTable object due to: column must have the same number of rows as 'id'")
+
+Traceback (most recent call last):
+  File "/opt/venv/lib/python3.13/site-packages/dandi_cache_utils/_runner.py", line 230, in attempt
+    value = process(item, scope) if takes_scope else process(item)
+            ~~~~~~~^^^^^^^^^^^^^
+  File "/workspace/code/update.py", line 112, in assess
+    raise _exception_like(type_name, message, details)
+ConstructError: (root/acquisition/_iblmic_audioSpectrogram/bands GroupBuilder {'attributes': {'colnames': array(['freq'], dtype=object), 'description': 'spectogram frequencies', 'namespace': 'core', 'neurodata_type': 'FrequencyBandsTable', 'object_id': '9742cd8d-0d76-43bf-8dea-3d32e1daaaa2'}, 'groups': {}, 'datasets': {'freq': root/acquisition/_iblmic_audioSpectrogram/bands/freq DatasetBuilder {'attributes': {'description': 'frequency value', 'namespace': 'hdmf-common', 'neurodata_type': 'VectorData', 'object_id': '6db12b92-4ca2-47e0-837c-8249ad7399b2'}, 'data': <HDF5 dataset "freq": shape (257,), type "<f4">}, 'id': root/acquisition/_iblmic_audioSpectrogram/bands/id DatasetBuilder {'attributes': {'namespace': 'hdmf-common', 'neurodata_type': 'ElementIdentifiers', 'object_id': '2ad29124-75fa-4c0f-89f6-fa79395eeca7'}, 'data': <HDF5 dataset "id": shape (257,), type "<i4">}}, 'links': {}}, "Could not construct FrequencyBandsTable object due to: column must have the same number of rows as 'id'")
+Raised in the child process:
+Traceback (most recent call last):
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1651, in construct
+    obj = self.__new_container__(cls, builder.source, parent, builder.attributes.get(self.__spec.id_key()),
+                                 **kwargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1664, in __new_container__
+    obj.__init__(**kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/pynwb/misc.py", line 401, in __init__
+    super().__init__(**kwargs)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/common/table.py", line 565, in __init__
+    self._init_class_columns()
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/common/table.py", line 649, in _init_class_columns
+    self.add_column(name=col['name'],
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+                    description=col['description'],
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+                    **{k: col[k] for k in col.keys()
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                       if k not in DynamicTable.__reserved_colspec_keys})
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/common/table.py", line 1103, in add_column
+    raise ValueError("column must have the same number of rows as 'id'")
+ValueError: column must have the same number of rows as 'id'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/workspace/code/update.py", line 81, in open_and_inspect
+    nwbfile, _io = dandi_cache.nwb.open_nwbfile(url, path)
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/dandi_cache_utils/nwb.py", line 171, in open_nwbfile
+    return io.read(), io
+           ~~~~~~~^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/pynwb/__init__.py", line 473, in read
+    file = super().read(**kwargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/backends/hdf5/h5tools.py", line 433, in read
+    return super().read(**kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/backends/io.py", line 72, in read
+    container = self.__manager.construct(f_builder)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 300, in construct
+    result = self.__type_map.construct(builder, self, None)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 908, in construct
+    return obj_mapper.construct(builder, build_manager, parent)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/pynwb/io/file.py", line 166, in construct
+    return super().construct(**kwargs)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1604, in construct
+    subspecs = self.__get_subspec_values(builder, self.spec, manager)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1469, in __get_subspec_values
+    self.__get_sub_builders(groups, spec.groups, manager, ret)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1573, in __get_sub_builders
+    ret.update(self.__get_subspec_values(sub_builder, subspec, manager))
+               ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1469, in __get_subspec_values
+    self.__get_sub_builders(groups, spec.groups, manager, ret)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1565, in __get_sub_builders
+    ret[subspec] = self.__flatten(matched, subspec, manager)
+                   ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1589, in __flatten
+    tmp = [manager.construct(b) for b in sub_builder]
+           ~~~~~~~~~~~~~~~~~^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 296, in construct
+    result = self.__type_map.construct(builder, self, parent)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 908, in construct
+    return obj_mapper.construct(builder, build_manager, parent)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1604, in construct
+    subspecs = self.__get_subspec_values(builder, self.spec, manager)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1469, in __get_subspec_values
+    self.__get_sub_builders(groups, spec.groups, manager, ret)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1575, in __get_sub_builders
+    ret[subspec] = manager.construct(sub_builder)
+                   ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 296, in construct
+    result = self.__type_map.construct(builder, self, parent)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 908, in construct
+    return obj_mapper.construct(builder, build_manager, parent)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1655, in construct
+    raise ConstructError(builder, msg) from ex
+hdmf.build.errors.ConstructError: (root/acquisition/_iblmic_audioSpectrogram/bands GroupBuilder {'attributes': {'colnames': array(['freq'], dtype=object), 'description': 'spectogram frequencies', 'namespace': 'core', 'neurodata_type': 'FrequencyBandsTable', 'object_id': '9742cd8d-0d76-43bf-8dea-3d32e1daaaa2'}, 'groups': {}, 'datasets': {'freq': root/acquisition/_iblmic_audioSpectrogram/bands/freq DatasetBuilder {'attributes': {'description': 'frequency value', 'namespace': 'hdmf-common', 'neurodata_type': 'VectorData', 'object_id': '6db12b92-4ca2-47e0-837c-8249ad7399b2'}, 'data': <HDF5 dataset "freq": shape (257,), type "<f4">}, 'id': root/acquisition/_iblmic_audioSpectrogram/bands/id DatasetBuilder {'attributes': {'namespace': 'hdmf-common', 'neurodata_type': 'ElementIdentifiers', 'object_id': '2ad29124-75fa-4c0f-89f6-fa79395eeca7'}, 'data': <HDF5 dataset "id": shape (257,), type "<i4">}}, 'links': {}}, "Could not construct FrequencyBandsTable object due to: column must have the same number of rows as 'id'")
+
+
+
+Error while opening the NWB file for `ffe00063-9a74-490d-aa30-a015e1d1997a` (dandiset ID 001632, path sub-60s-10percentD-M1/sub-60s-10percentD-M1_ses-day23.nwb, URL https://dandiarchive.s3.amazonaws.com/blobs/ffe/000/ffe00063-9a74-490d-aa30-a015e1d1997a)!
+
+<class '__main__.ConstructError'>: (root/acquisition/event_code_meanings GroupBuilder {'attributes': {'colnames': array(['value', 'meaning'], dtype=object), 'description': 'Mapping integer event codes to event labels', 'namespace': 'ndx-events', 'neurodata_type': 'MeaningsTable', 'object_id': '537ec24d-a668-4252-90bc-6cbf402bac65'}, 'groups': {}, 'datasets': {'id': root/acquisition/event_code_meanings/id DatasetBuilder {'attributes': {'namespace': 'hdmf-common', 'neurodata_type': 'ElementIdentifiers', 'object_id': 'ca80546f-5395-445d-8360-b8985f6af675'}, 'data': <HDF5 dataset "id": shape (26,), type "<i8">}, 'meaning': root/acquisition/event_code_meanings/meaning DatasetBuilder {'attributes': {'description': 'The meaning of the value in the parent CategoricalVectorData object.', 'namespace': 'hdmf-experimental', 'neurodata_type': 'VectorData', 'object_id': '30382ef8-575b-450e-a6f6-639297de221e'}, 'data': <StrDataset for HDF5 dataset "meaning": shape (26,), type "|O">}, 'value': root/acquisition/event_code_meanings/value DatasetBuilder {'attributes': {'description': 'The value of the parent CategoricalVectorData object.', 'namespace': 'hdmf-experimental', 'neurodata_type': 'VectorData', 'object_id': '9555a7a2-3687-4b07-9725-03dad66c42e2'}, 'data': <HDF5 dataset "value": shape (26,), type "<i8">}}, 'links': {}}, "Could not construct MeaningsTable object due to: MeaningsTable.__init__: missing argument 'target'")
+
+Traceback (most recent call last):
+  File "/opt/venv/lib/python3.13/site-packages/dandi_cache_utils/_runner.py", line 230, in attempt
+    value = process(item, scope) if takes_scope else process(item)
+            ~~~~~~~^^^^^^^^^^^^^
+  File "/workspace/code/update.py", line 112, in assess
+    raise _exception_like(type_name, message, details)
+ConstructError: (root/acquisition/event_code_meanings GroupBuilder {'attributes': {'colnames': array(['value', 'meaning'], dtype=object), 'description': 'Mapping integer event codes to event labels', 'namespace': 'ndx-events', 'neurodata_type': 'MeaningsTable', 'object_id': '537ec24d-a668-4252-90bc-6cbf402bac65'}, 'groups': {}, 'datasets': {'id': root/acquisition/event_code_meanings/id DatasetBuilder {'attributes': {'namespace': 'hdmf-common', 'neurodata_type': 'ElementIdentifiers', 'object_id': 'ca80546f-5395-445d-8360-b8985f6af675'}, 'data': <HDF5 dataset "id": shape (26,), type "<i8">}, 'meaning': root/acquisition/event_code_meanings/meaning DatasetBuilder {'attributes': {'description': 'The meaning of the value in the parent CategoricalVectorData object.', 'namespace': 'hdmf-experimental', 'neurodata_type': 'VectorData', 'object_id': '30382ef8-575b-450e-a6f6-639297de221e'}, 'data': <StrDataset for HDF5 dataset "meaning": shape (26,), type "|O">}, 'value': root/acquisition/event_code_meanings/value DatasetBuilder {'attributes': {'description': 'The value of the parent CategoricalVectorData object.', 'namespace': 'hdmf-experimental', 'neurodata_type': 'VectorData', 'object_id': '9555a7a2-3687-4b07-9725-03dad66c42e2'}, 'data': <HDF5 dataset "value": shape (26,), type "<i8">}}, 'links': {}}, "Could not construct MeaningsTable object due to: MeaningsTable.__init__: missing argument 'target'")
+Raised in the child process:
+Traceback (most recent call last):
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1651, in construct
+    obj = self.__new_container__(cls, builder.source, parent, builder.attributes.get(self.__spec.id_key()),
+                                 **kwargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1664, in __new_container__
+    obj.__init__(**kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 640, in func_call
+    pargs = _check_args(args, kwargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 633, in _check_args
+    raise ExceptionType(msg)
+TypeError: MeaningsTable.__init__: missing argument 'target'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/workspace/code/update.py", line 81, in open_and_inspect
+    nwbfile, _io = dandi_cache.nwb.open_nwbfile(url, path)
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/dandi_cache_utils/nwb.py", line 171, in open_nwbfile
+    return io.read(), io
+           ~~~~~~~^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/pynwb/__init__.py", line 473, in read
+    file = super().read(**kwargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/backends/hdf5/h5tools.py", line 433, in read
+    return super().read(**kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/backends/io.py", line 72, in read
+    container = self.__manager.construct(f_builder)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 300, in construct
+    result = self.__type_map.construct(builder, self, None)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 908, in construct
+    return obj_mapper.construct(builder, build_manager, parent)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/pynwb/io/file.py", line 166, in construct
+    return super().construct(**kwargs)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1604, in construct
+    subspecs = self.__get_subspec_values(builder, self.spec, manager)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1469, in __get_subspec_values
+    self.__get_sub_builders(groups, spec.groups, manager, ret)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1573, in __get_sub_builders
+    ret.update(self.__get_subspec_values(sub_builder, subspec, manager))
+               ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1469, in __get_subspec_values
+    self.__get_sub_builders(groups, spec.groups, manager, ret)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1565, in __get_sub_builders
+    ret[subspec] = self.__flatten(matched, subspec, manager)
+                   ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1589, in __flatten
+    tmp = [manager.construct(b) for b in sub_builder]
+           ~~~~~~~~~~~~~~~~~^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 296, in construct
+    result = self.__type_map.construct(builder, self, parent)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 908, in construct
+    return obj_mapper.construct(builder, build_manager, parent)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/common/io/table.py", line 157, in construct
+    return super().construct(builder, manager, parent)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1655, in construct
+    raise ConstructError(builder, msg) from ex
+hdmf.build.errors.ConstructError: (root/acquisition/event_code_meanings GroupBuilder {'attributes': {'colnames': array(['value', 'meaning'], dtype=object), 'description': 'Mapping integer event codes to event labels', 'namespace': 'ndx-events', 'neurodata_type': 'MeaningsTable', 'object_id': '537ec24d-a668-4252-90bc-6cbf402bac65'}, 'groups': {}, 'datasets': {'id': root/acquisition/event_code_meanings/id DatasetBuilder {'attributes': {'namespace': 'hdmf-common', 'neurodata_type': 'ElementIdentifiers', 'object_id': 'ca80546f-5395-445d-8360-b8985f6af675'}, 'data': <HDF5 dataset "id": shape (26,), type "<i8">}, 'meaning': root/acquisition/event_code_meanings/meaning DatasetBuilder {'attributes': {'description': 'The meaning of the value in the parent CategoricalVectorData object.', 'namespace': 'hdmf-experimental', 'neurodata_type': 'VectorData', 'object_id': '30382ef8-575b-450e-a6f6-639297de221e'}, 'data': <StrDataset for HDF5 dataset "meaning": shape (26,), type "|O">}, 'value': root/acquisition/event_code_meanings/value DatasetBuilder {'attributes': {'description': 'The value of the parent CategoricalVectorData object.', 'namespace': 'hdmf-experimental', 'neurodata_type': 'VectorData', 'object_id': '9555a7a2-3687-4b07-9725-03dad66c42e2'}, 'data': <HDF5 dataset "value": shape (26,), type "<i8">}}, 'links': {}}, "Could not construct MeaningsTable object due to: MeaningsTable.__init__: missing argument 'target'")
+
+
+
+Error while opening the NWB file for `ffffac94-b4aa-4b25-acaa-36a7aba6e1cc` (dandiset ID 001632, path sub-60s-50percentD-F1/sub-60s-50percentD-F1_ses-day11.nwb, URL https://dandiarchive.s3.amazonaws.com/blobs/fff/fac/ffffac94-b4aa-4b25-acaa-36a7aba6e1cc)!
+
+<class '__main__.ConstructError'>: (root/acquisition/event_code_meanings GroupBuilder {'attributes': {'colnames': array(['value', 'meaning'], dtype=object), 'description': 'Mapping integer event codes to event labels', 'namespace': 'ndx-events', 'neurodata_type': 'MeaningsTable', 'object_id': '2134cdbb-f21e-41af-bc6c-db1f3ee8c55a'}, 'groups': {}, 'datasets': {'id': root/acquisition/event_code_meanings/id DatasetBuilder {'attributes': {'namespace': 'hdmf-common', 'neurodata_type': 'ElementIdentifiers', 'object_id': '25060374-ff12-44c2-b5f0-6be38e5aebbd'}, 'data': <HDF5 dataset "id": shape (26,), type "<i8">}, 'meaning': root/acquisition/event_code_meanings/meaning DatasetBuilder {'attributes': {'description': 'The meaning of the value in the parent CategoricalVectorData object.', 'namespace': 'hdmf-experimental', 'neurodata_type': 'VectorData', 'object_id': '1d86c695-bc1a-4b95-a480-64d3c2eaefc8'}, 'data': <StrDataset for HDF5 dataset "meaning": shape (26,), type "|O">}, 'value': root/acquisition/event_code_meanings/value DatasetBuilder {'attributes': {'description': 'The value of the parent CategoricalVectorData object.', 'namespace': 'hdmf-experimental', 'neurodata_type': 'VectorData', 'object_id': 'b6ecb993-4a7b-4a87-89a1-882dfd4a211f'}, 'data': <HDF5 dataset "value": shape (26,), type "<i8">}}, 'links': {}}, "Could not construct MeaningsTable object due to: MeaningsTable.__init__: missing argument 'target'")
+
+Traceback (most recent call last):
+  File "/opt/venv/lib/python3.13/site-packages/dandi_cache_utils/_runner.py", line 230, in attempt
+    value = process(item, scope) if takes_scope else process(item)
+            ~~~~~~~^^^^^^^^^^^^^
+  File "/workspace/code/update.py", line 112, in assess
+    raise _exception_like(type_name, message, details)
+ConstructError: (root/acquisition/event_code_meanings GroupBuilder {'attributes': {'colnames': array(['value', 'meaning'], dtype=object), 'description': 'Mapping integer event codes to event labels', 'namespace': 'ndx-events', 'neurodata_type': 'MeaningsTable', 'object_id': '2134cdbb-f21e-41af-bc6c-db1f3ee8c55a'}, 'groups': {}, 'datasets': {'id': root/acquisition/event_code_meanings/id DatasetBuilder {'attributes': {'namespace': 'hdmf-common', 'neurodata_type': 'ElementIdentifiers', 'object_id': '25060374-ff12-44c2-b5f0-6be38e5aebbd'}, 'data': <HDF5 dataset "id": shape (26,), type "<i8">}, 'meaning': root/acquisition/event_code_meanings/meaning DatasetBuilder {'attributes': {'description': 'The meaning of the value in the parent CategoricalVectorData object.', 'namespace': 'hdmf-experimental', 'neurodata_type': 'VectorData', 'object_id': '1d86c695-bc1a-4b95-a480-64d3c2eaefc8'}, 'data': <StrDataset for HDF5 dataset "meaning": shape (26,), type "|O">}, 'value': root/acquisition/event_code_meanings/value DatasetBuilder {'attributes': {'description': 'The value of the parent CategoricalVectorData object.', 'namespace': 'hdmf-experimental', 'neurodata_type': 'VectorData', 'object_id': 'b6ecb993-4a7b-4a87-89a1-882dfd4a211f'}, 'data': <HDF5 dataset "value": shape (26,), type "<i8">}}, 'links': {}}, "Could not construct MeaningsTable object due to: MeaningsTable.__init__: missing argument 'target'")
+Raised in the child process:
+Traceback (most recent call last):
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1651, in construct
+    obj = self.__new_container__(cls, builder.source, parent, builder.attributes.get(self.__spec.id_key()),
+                                 **kwargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1664, in __new_container__
+    obj.__init__(**kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 640, in func_call
+    pargs = _check_args(args, kwargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 633, in _check_args
+    raise ExceptionType(msg)
+TypeError: MeaningsTable.__init__: missing argument 'target'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/workspace/code/update.py", line 81, in open_and_inspect
+    nwbfile, _io = dandi_cache.nwb.open_nwbfile(url, path)
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/dandi_cache_utils/nwb.py", line 171, in open_nwbfile
+    return io.read(), io
+           ~~~~~~~^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/pynwb/__init__.py", line 473, in read
+    file = super().read(**kwargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/backends/hdf5/h5tools.py", line 433, in read
+    return super().read(**kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/backends/io.py", line 72, in read
+    container = self.__manager.construct(f_builder)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 300, in construct
+    result = self.__type_map.construct(builder, self, None)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 908, in construct
+    return obj_mapper.construct(builder, build_manager, parent)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/pynwb/io/file.py", line 166, in construct
+    return super().construct(**kwargs)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1604, in construct
+    subspecs = self.__get_subspec_values(builder, self.spec, manager)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1469, in __get_subspec_values
+    self.__get_sub_builders(groups, spec.groups, manager, ret)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1573, in __get_sub_builders
+    ret.update(self.__get_subspec_values(sub_builder, subspec, manager))
+               ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1469, in __get_subspec_values
+    self.__get_sub_builders(groups, spec.groups, manager, ret)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1565, in __get_sub_builders
+    ret[subspec] = self.__flatten(matched, subspec, manager)
+                   ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1589, in __flatten
+    tmp = [manager.construct(b) for b in sub_builder]
+           ~~~~~~~~~~~~~~~~~^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 296, in construct
+    result = self.__type_map.construct(builder, self, parent)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/manager.py", line 908, in construct
+    return obj_mapper.construct(builder, build_manager, parent)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/common/io/table.py", line 157, in construct
+    return super().construct(builder, manager, parent)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/utils.py", line 641, in func_call
+    return func(args[0], **pargs)
+  File "/opt/venv/lib/python3.13/site-packages/hdmf/build/objectmapper.py", line 1655, in construct
+    raise ConstructError(builder, msg) from ex
+hdmf.build.errors.ConstructError: (root/acquisition/event_code_meanings GroupBuilder {'attributes': {'colnames': array(['value', 'meaning'], dtype=object), 'description': 'Mapping integer event codes to event labels', 'namespace': 'ndx-events', 'neurodata_type': 'MeaningsTable', 'object_id': '2134cdbb-f21e-41af-bc6c-db1f3ee8c55a'}, 'groups': {}, 'datasets': {'id': root/acquisition/event_code_meanings/id DatasetBuilder {'attributes': {'namespace': 'hdmf-common', 'neurodata_type': 'ElementIdentifiers', 'object_id': '25060374-ff12-44c2-b5f0-6be38e5aebbd'}, 'data': <HDF5 dataset "id": shape (26,), type "<i8">}, 'meaning': root/acquisition/event_code_meanings/meaning DatasetBuilder {'attributes': {'description': 'The meaning of the value in the parent CategoricalVectorData object.', 'namespace': 'hdmf-experimental', 'neurodata_type': 'VectorData', 'object_id': '1d86c695-bc1a-4b95-a480-64d3c2eaefc8'}, 'data': <StrDataset for HDF5 dataset "meaning": shape (26,), type "|O">}, 'value': root/acquisition/event_code_meanings/value DatasetBuilder {'attributes': {'description': 'The value of the parent CategoricalVectorData object.', 'namespace': 'hdmf-experimental', 'neurodata_type': 'VectorData', 'object_id': 'b6ecb993-4a7b-4a87-89a1-882dfd4a211f'}, 'data': <HDF5 dataset "value": shape (26,), type "<i8">}}, 'links': {}}, "Could not construct MeaningsTable object due to: MeaningsTable.__init__: missing argument 'target'")
 
 
 
